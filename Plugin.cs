@@ -3,38 +3,38 @@
 /*
 TODO
 
-height clamp broke terrain snapping FIXED
-keybind to place multiple units     DONE
-lines to airbases and waypoints     DONE
-extend dropdowns                    DONE
-toggle to place unit with hold position DONE
-shrink MissionNameInput if more buttons are needed DONE
+DONE    embed assetbundle
+DONE    hold ctrl to swap from POSITION to ROTATE
+DONE    add group selection - shift+drag
+        add terrain collision toggle
 
-add snapping                        DONEish, not snapping cursor ghost
+add snapping to cursor ghost
+make snapping snap to global positions
 custom button icons
-
 */
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
-using NuclearOption.MissionEditorScripts;
-using NuclearOption.SavedMission.ObjectiveV2;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using System.Linq;
-using System.IO;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using NuclearOption.SavedMission.ObjectiveV2.Outcomes;
-using UnityEngine.UI;
-using System.Collections;
-using NuclearOption.SavedMission;
-using NuclearOption.MissionEditorScripts.Buttons;
 using HarmonyLib;
-using TMPro;
-using RuntimeHandle;
-using System.Globalization;
+using NuclearOption.MissionEditorScripts;
+using NuclearOption.MissionEditorScripts.Buttons;
+using NuclearOption.SavedMission;
+using NuclearOption.SavedMission.ObjectiveV2;
 using NuclearOption.SavedMission.ObjectiveV2.Objectives;
+using NuclearOption.SavedMission.ObjectiveV2.Outcomes;
+using RuntimeHandle;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace EditorPlus
 {
@@ -42,7 +42,6 @@ namespace EditorPlus
     public sealed class Plugin : BaseUnityPlugin
     {
         public static new ManualLogSource Logger;
-        private string _modPath;
         private AssetBundle _bundle;
         private GameObject _overlayRoot;
         private GraphView _view;
@@ -62,11 +61,12 @@ namespace EditorPlus
         private const float LeftPanelShiftX = -530f;
         internal static Plugin Instance;
         private bool _nameInputShrunk;
+        private Toggle _terrainToggle;     
+        public bool ignoreTerrain = false;
         void Awake()
         {
             Instance = this;
             Logger = base.Logger;
-            _modPath = Path.GetDirectoryName(Info.Location);
             Harmony harmony = new(MyPluginInfo.PLUGIN_GUID);
             harmony.PatchAll();
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -123,6 +123,7 @@ namespace EditorPlus
             _overlayToggleButton = null;
             _gridToggleButton = null;
             _holdPosToggle = null;
+            _terrainToggle = null;
             objectivesBtn = null;
             editormenu = null;
             _view = null;
@@ -138,10 +139,10 @@ namespace EditorPlus
         {
 
             Type t = outc.GetType();
-            if (!_completeObjListField.TryGetValue(t, out var fi))
+            if (!_completeObjListField.TryGetValue(t, value: out _))
             {
                 const BindingFlags BF = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-                fi = t.GetField("objectivesToStart", BF);
+                FieldInfo fi = t.GetField("objectivesToStart", BF);
                 _completeObjListField[t] = fi;
             }
 
@@ -168,7 +169,7 @@ namespace EditorPlus
 
             Transform parent = template.transform?.parent;
             if (!parent) return false;
-            ShrinkTopbarFirstSibling(parent, 0.7f);
+            ShrinkTopbarFirstSibling(parent, 0.5f); //shrink name box for more buttons
             _overlayToggleButton ??= EnsureToolbarButton(
                 parent, template, "EditorPlusToggleButton", "Graph",
                 () =>
@@ -197,11 +198,16 @@ namespace EditorPlus
                 "HoldPosToggle",
                 "Hold Pos",
                 Instance.holdpos,
-                v =>
-                {
-                    Instance.holdpos = v;
-                });
-
+                v => { Instance.holdpos = v; }
+            );
+            _terrainToggle ??= EnsureToolbarToggle(
+                parent,
+                autoSaveTemplate,
+                "IgnoreTerrainToggle",
+                "noclip",
+                Instance.ignoreTerrain,
+                v => { Instance.ignoreTerrain = v; }
+            );
             return _overlayToggleButton && _gridToggleButton && _holdPosToggle;
         }
         private static Toggle EnsureToolbarToggle(
@@ -236,7 +242,7 @@ namespace EditorPlus
             return t;
         }
 
-        private void ShrinkTopbarFirstSibling(Transform parent, float factor = 0.7f)
+        private void ShrinkTopbarFirstSibling(Transform parent, float factor)
         {
             if (_nameInputShrunk) return;
             if (parent?.Find("MissionNameInput") is not RectTransform rt) return;
@@ -341,19 +347,19 @@ namespace EditorPlus
                 yield break;
             }
 
-            var ow = mo.AllOutcomes.FirstOrDefault(oc => oc.SavedOutcome.UniqueName == uniqueId);
+            Outcome ow = mo.AllOutcomes.FirstOrDefault(oc => oc.SavedOutcome.UniqueName == uniqueId);
             if (ow == null) yield break;
 
-            foreach (var su in EnumerateFromObject<SavedUnit>(ow))
+            foreach (SavedUnit su in EnumerateFromObject<SavedUnit>(ow))
             {
-                var local = su;
+                SavedUnit local = su;
                 yield return () => local.globalPosition.AsVector3() + Datum.originPosition;
             }
 
-            var saved = GetPropOrFieldValue(ow, "SavedOutcome");
-            foreach (var su in EnumerateFromObject<SavedUnit>(saved))
+            object saved = GetPropOrFieldValue(ow, "SavedOutcome");
+            foreach (SavedUnit su in EnumerateFromObject<SavedUnit>(saved))
             {
-                var local = su;
+                SavedUnit local = su;
                 yield return () => local.globalPosition.AsVector3() + Datum.originPosition;
             }
 
@@ -364,23 +370,23 @@ namespace EditorPlus
         {
             if (src == null) yield break;
 
-            var t = src.GetType();
-            if (!s_EnumerableMembersCache.TryGetValue((t, typeof(T)), out var members))
+            Type t = src.GetType();
+            if (!s_EnumerableMembersCache.TryGetValue((t, typeof(T)), out MemberInfo[] members))
             {
                 const BindingFlags F = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-                var list = new List<MemberInfo>();
+                List<MemberInfo> list = [];
 
-                foreach (var f in t.GetFields(F))
+                foreach (FieldInfo f in t.GetFields(F))
                     if (IsEnumerableOf<T>(f.FieldType)) list.Add(f);
 
-                foreach (var p in t.GetProperties(F))
+                foreach (PropertyInfo p in t.GetProperties(F))
                     if (p.CanRead && p.GetIndexParameters().Length == 0 && IsEnumerableOf<T>(p.PropertyType)) list.Add(p);
 
-                members = list.ToArray();
+                members = [.. list];
                 s_EnumerableMembersCache[(t, typeof(T))] = members;
             }
 
-            foreach (var m in members)
+            foreach (MemberInfo m in members)
             {
                 object v = m is FieldInfo f ? f.GetValue(src)
                            : m is PropertyInfo p ? p.GetValue(src, null)
@@ -388,8 +394,8 @@ namespace EditorPlus
 
                 if (v == null) continue;
 
-                if (v is IEnumerable<T> typed) { foreach (var e in typed) if (e != null) yield return e; }
-                else if (v is IEnumerable any) { foreach (var e in any) if (e is T te) yield return te; }
+                if (v is IEnumerable<T> typed) { foreach (T e in typed) if (e != null) yield return e; }
+                else if (v is IEnumerable any) { foreach (object e in any) if (e is T te) yield return te; }
             }
 
             static bool IsEnumerableOf<TElem>(Type ft)
@@ -398,7 +404,7 @@ namespace EditorPlus
                 if (!typeof(IEnumerable).IsAssignableFrom(ft)) return false;
                 if (ft.IsGenericType)
                 {
-                    var ga = ft.GetGenericArguments();
+                    Type[] ga = ft.GetGenericArguments();
                     if (ga.Length == 1 && typeof(TElem).IsAssignableFrom(ga[0])) return true;
                 }
                 return false;
@@ -424,37 +430,49 @@ namespace EditorPlus
             const BindingFlags F = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             return t.GetProperty(name, F)?.GetValue(obj, null) ?? t.GetField(name, F)?.GetValue(obj);
         }
+        private Stream _bundleStream;
+        private bool TryLoadEmbeddedBundle()
+        {
+            string resName = Assembly.GetExecutingAssembly().GetManifestResourceNames()
+                .FirstOrDefault(n => n.EndsWith(".noep", StringComparison.OrdinalIgnoreCase));
+            if (resName == null) return false;
+
+            _bundleStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resName);
+            if (_bundleStream == null || !_bundleStream.CanRead || !_bundleStream.CanSeek) return false;
+
+            _bundle = AssetBundle.LoadFromStream(_bundleStream);
+            return _bundle != null;
+        }
 
         private bool EnsureOverlayLoaded()
         {
             if (_overlayRoot) return true;
 
-            string path = Directory.EnumerateFiles(_modPath, "*.noep", SearchOption.TopDirectoryOnly).FirstOrDefault();
-
-            if (string.IsNullOrEmpty(path))
+            if (_bundle == null && !TryLoadEmbeddedBundle())
             {
-                Logger.LogError($"No .noep file found in '{_modPath}'.");
+                Logger.LogError("No embedded asset bundle found in the assembly resources.");
                 return false;
             }
 
-            if (_bundle == null)
-            {
-                _bundle = AssetBundle.LoadFromFile(path);
-                if (!_bundle) { Logger.LogError($"Failed to load bundle: {path}"); return false; }
-            }
-
-            var prefab = _bundle.LoadAsset<GameObject>("GraphOverlayPanel");
+            GameObject prefab = _bundle.LoadAsset<GameObject>("GraphOverlayPanel");
             if (!prefab) { Logger.LogError("Prefab 'GraphOverlayPanel' not found in bundle."); return false; }
 
-            if (!TryFindHostCanvas(out var hostCanvas))
+            if (!TryFindHostCanvas(out Canvas hostCanvas))
             {
-                base.Logger.LogError("Could not find a suitable Canvas under 'SceneEssentials/Canvas'.");
+                Logger.LogError("Could not find a suitable Canvas under 'SceneEssentials/Canvas'.");
                 return false;
+            }
+            if (!FindObjectOfType<GroupFollowers>())
+            {
+                GameObject go = new("GroupGroup");
+                DontDestroyOnLoad(go);
+                go.AddComponent<GroupFollowers>();
+                go.AddComponent<BoxSelectVanilla>();
             }
 
             _overlayRoot = Instantiate(prefab, hostCanvas.transform, false);
             _overlayRoot.name = "MissionGraph_OverlayPanel";
-            var rt = (RectTransform)_overlayRoot.transform;
+            RectTransform rt = _overlayRoot.transform as RectTransform;
             rt.anchorMin = Vector2.zero;
             rt.anchorMax = Vector2.one;
             rt.offsetMin = Vector2.zero;
@@ -475,9 +493,9 @@ namespace EditorPlus
                 {
                     Logger.LogInfo($"[MissionGraph] LINK request: {fromId}({(fromIsObj ? "OBJ" : "OUT")}) > {toId}({(toIsObj ? "OBJ" : "OUT")})");
 
-                    var mo = MissionManager.Objectives;
-                    var o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
-                    var oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
+                    MissionObjectives mo = MissionManager.Objectives;
+                    Objective o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
+                    Outcome oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
 
                     if (o == null || oc == null)
                     {
@@ -521,9 +539,9 @@ namespace EditorPlus
                 {
                     Logger.LogInfo($"[MissionGraph] UNLINK request: {fromId}({(fromIsObj ? "OBJ" : "OUT")}) > {toId}({(toIsObj ? "OBJ" : "OUT")})");
 
-                    var mo = MissionManager.Objectives;
-                    var o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
-                    var oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
+                    MissionObjectives mo = MissionManager.Objectives;
+                    Objective o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
+                    Outcome oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
                     if (o == null || oc == null)
                     {
                         Logger.LogError($"[MissionGraph] UNLINK resolve failed. UI/model out of sync. fromId={fromId} toId={toId} fromIsObj={fromIsObj} toIsObj={toIsObj}");
@@ -593,8 +611,8 @@ namespace EditorPlus
 
             editormenu.ShowObjectiveList();
             yield return null;
-            var mo = MissionManager.Objectives;
-            var obj = mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == uniqueName);
+            MissionObjectives mo = MissionManager.Objectives;
+            Objective obj = mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == uniqueName);
             if (obj != null)
                 editormenu.ShowEditObjective(obj);
         }
@@ -606,7 +624,7 @@ namespace EditorPlus
 
             editormenu.ShowOutcomeList();
             yield return null;
-            var mo = MissionManager.Objectives;
+            MissionObjectives mo = MissionManager.Objectives;
             int idx = mo.AllOutcomes.FindIndex(oc => oc.SavedOutcome.UniqueName == uniqueName);
             if (idx < 0) yield break;
 
@@ -619,7 +637,7 @@ namespace EditorPlus
         {
             if (outc is StartObjectiveOutcome so)
             {
-                so.objectivesToStart ??= new List<Objective>();
+                so.objectivesToStart ??= [];
                 if (so.objectivesToStart.Contains(obj)) return false;
                 so.objectivesToStart.Add(obj);
                 return true;
@@ -627,7 +645,7 @@ namespace EditorPlus
 
             if (outc.SavedOutcome.Type == OutcomeType.StopOrCompleteObjective)
             {
-                var list = GetCompleteList(outc, createIfMissing: true);
+                List<Objective> list = GetCompleteList(outc, createIfMissing: true);
                 if (list.Contains(obj)) return false;
                 list.Add(obj);
                 return true;
@@ -643,7 +661,7 @@ namespace EditorPlus
 
             if (outc.SavedOutcome.Type == OutcomeType.StopOrCompleteObjective)
             {
-                var list = GetCompleteList(outc);
+                List<Objective> list = GetCompleteList(outc);
                 return list != null && list.Remove(obj);
             }
 
@@ -653,12 +671,12 @@ namespace EditorPlus
         private static bool TryFindHostCanvas(out Canvas host)
         {
             host = null;
-            var container = GameObject.Find("SceneEssentials/Canvas");
+            GameObject container = GameObject.Find("SceneEssentials/Canvas");
             if (container)
             {
-                var canvases = container.GetComponentsInChildren<Canvas>(true);
+                Canvas[] canvases = container.GetComponentsInChildren<Canvas>(true);
                 Canvas pick = null;
-                foreach (var c in canvases)
+                foreach (Canvas c in canvases)
                 {
                     if (!c.isActiveAndEnabled) continue;
                     if (c.name.Contains("Menu", StringComparison.OrdinalIgnoreCase))
@@ -668,7 +686,7 @@ namespace EditorPlus
                 }
                 if (pick == null)
                 {
-                    foreach (var c in canvases)
+                    foreach (Canvas c in canvases)
                         if (pick == null || c.sortingOrder >= pick.sortingOrder) pick = c;
                 }
 
@@ -683,10 +701,10 @@ namespace EditorPlus
 
             Logger.LogDebug("[Graph] Rebuild start");
 
-            var mo = MissionManager.Objectives;
+            MissionObjectives mo = MissionManager.Objectives;
             if (mo == null) return;
 
-            var objectives = mo.AllObjectives.Select(o => new GraphView.ObjectiveDTO
+            GraphView.ObjectiveDTO[] objectives = [.. mo.AllObjectives.Select(o => new GraphView.ObjectiveDTO
             {
                 Id = o.SavedObjective.UniqueName,
                 UniqueName = o.SavedObjective.UniqueName,
@@ -697,9 +715,9 @@ namespace EditorPlus
                 Layer = 0,
                 Row = 0,
                 FactionName = (o as IHasFaction)?.FactionName
-            }).ToArray();
+            })];
 
-            var outcomes = mo.AllOutcomes.Select(uc => new GraphView.OutcomeDTO
+            GraphView.OutcomeDTO[] outcomes = [.. mo.AllOutcomes.Select(uc => new GraphView.OutcomeDTO
             {
                 Id = uc.SavedOutcome.UniqueName,
                 UniqueName = uc.SavedOutcome.UniqueName,
@@ -707,13 +725,13 @@ namespace EditorPlus
                 UsedByCount = 0,
                 Layer = 0,
                 Row = 0
-            }).ToArray();
+            })];
 
             List<GraphView.LinkDTO> links = [];
             foreach (Objective o in mo.AllObjectives)
             {
                 string oid = o.SavedObjective.UniqueName;
-                foreach (var oc in o.Outcomes)
+                foreach (Outcome oc in o.Outcomes)
                     links.Add(new GraphView.LinkDTO { FromId = oid, FromIsObjective = true, ToId = oc.SavedOutcome.UniqueName, ToIsObjective = false });
             }
             foreach (Outcome oc in mo.AllOutcomes)
@@ -770,8 +788,15 @@ namespace EditorPlus
         internal static class EditorHandle_ClampY_Patch
         {
             static void Prefix(GlobalPosition position, out float __state) => __state = position.y;
-            static void Postfix(ref GlobalPosition __result, float __state) => __result.y = Mathf.Max(__state, __result.y);
-
+            static void Postfix(ref GlobalPosition __result, float __state)
+            {
+                if (Instance != null && Instance.ignoreTerrain)
+                {
+                    __result.y = __state;
+                    return;
+                }
+                __result.y = Mathf.Max(__state, __result.y);
+            }
         }
 
         [HarmonyPatch(typeof(UnitMenu), "PlaceUnit", [])]
@@ -801,7 +826,7 @@ namespace EditorPlus
                 {
                     if (_instance == null)
                     {
-                        var go = new GameObject("HarmonyCoroutineRunner");
+                        GameObject go = new("HarmonyCoroutineRunner");
                         DontDestroyOnLoad(go);
                         _instance = go.AddComponent<HarmonyCoroutineRunner>();
                     }
@@ -877,6 +902,46 @@ namespace EditorPlus
         }
     }
 
+    [HarmonyPatch(typeof(EditorHandle), "Update")]
+    static class EditorHandle_Fast_Rotate
+    {
+        private static Action<EditorHandle, HandleType, bool> _setMode;
+        private static FieldInfo _fiHandleType;
+        private static readonly KeyCode FAST_ROTATE_KEY = KeyCode.LeftControl;
+
+        static void Postfix(EditorHandle __instance)
+        {
+            if (__instance == null || !__instance.isActiveAndEnabled) return;
+
+            if (_fiHandleType == null)
+            {
+                _fiHandleType = AccessTools.Field(typeof(EditorHandle), "type");
+                if (_fiHandleType == null) return;
+            }
+
+            if (_setMode == null)
+            {
+                MethodInfo mi = AccessTools.Method(typeof(EditorHandle), "SetMode", [typeof(HandleType), typeof(bool)]);
+                if (mi == null) return;
+                _setMode = AccessTools.MethodDelegate<Action<EditorHandle, HandleType, bool>>(mi);
+            }
+
+            HandleType _handleType = (HandleType)_fiHandleType.GetValue(__instance);
+            if (_handleType == HandleType.NONE) return;
+
+            bool _keyHeld = Input.GetKey(FAST_ROTATE_KEY);
+            HandleType _overrideType = _keyHeld ? HandleType.ROTATION : HandleType.POSITION;
+
+            if (_handleType != _overrideType)
+                _setMode(__instance, _overrideType, false);
+        }
+    }
+
+
+    [HarmonyPatch(typeof(PositionPlane), "Interact")]
+
+
+
     [HarmonyPatch(typeof(Dropdown), "Show")]
     static class Dropdown_Patch
     {
@@ -885,11 +950,16 @@ namespace EditorPlus
         static void Postfix(Dropdown __instance)
         {
             if (F_List?.GetValue(__instance) is not GameObject listGo) return;
-            if (listGo.TryGetComponent(out RectTransform listRt))
-            {
-                int count = Mathf.Max(1, __instance.options?.Count ?? 0);
-                listRt.sizeDelta = new(listRt.sizeDelta.x, count * 20 + 8);
-            }
+            if (!listGo.TryGetComponent(out RectTransform listRt)) return;
+
+            int count = Mathf.Max(1, __instance.options?.Count ?? 0);
+            float desired = count * 20f + 8f;
+
+            Canvas canvas = __instance.GetComponentInParent<Canvas>()?.rootCanvas;
+            float scale = canvas ? canvas.scaleFactor : 1f;
+            float maxHeight = (Screen.safeArea.height * 0.5f) / scale;
+            listRt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Mathf.Min(desired, maxHeight));
         }
     }
+
 }

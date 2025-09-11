@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>com.nikkorap.EditorPlus</AssemblyName>
     <Product>editorplus</Product>
-    <Version>1.3.1</Version>
+    <Version>1.4.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -14,6 +14,14 @@
     </RestoreAdditionalProjectSources>
     <RootNamespace>EditorPlus</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="editorplus_ui.noep" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="editorplus_ui.noep" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
@@ -32,11 +40,17 @@
     <Reference Include="RuntimeTransformHandle">
       <HintPath>..\CustomAssets.Placeholders\bin\Debug\netstandard2.1\RuntimeTransformHandle.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\Unity.InputSystem.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
@@ -46,6 +60,9 @@
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
