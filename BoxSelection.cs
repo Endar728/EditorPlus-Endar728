@@ -1,121 +1,173 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace EditorPlus
 {
-    [RequireComponent(typeof(GroupFollowers))]
     public sealed class BoxSelection : MonoBehaviour
     {
-        [SerializeField] private Camera worldCam;
-        [SerializeField] private readonly KeyCode modifyKey = KeyCode.LeftShift;
-        [SerializeField] private readonly float minDragPixels = 6f;
-        private GroupFollowers _followers;
-        void Awake()
+        public Camera selectionCamera;
+        public KeyCode selectionModifierKey = KeyCode.LeftShift;
+        public float minimumDragSizePixels = 6f;
+        public float maximumSelectionDistanceWorld = 0f;
+
+        private GroupFollowers _groupFollowers;
+        private bool _isDragging;
+        private Vector2 _dragStartScreenPosition;
+        private Rect _dragRectangleScreen;
+
+        private void Awake()
         {
-            if (!worldCam) worldCam = Camera.main;
-            _followers = GetComponent<GroupFollowers>();
+            if (!selectionCamera) selectionCamera = Camera.main;
+
+            _groupFollowers = GetComponent<GroupFollowers>();
+            if (!_groupFollowers)
+            {
+                Debug.LogError("BoxSelection requires GroupFollowers on the same GameObject.");
+                enabled = false;
+            }
         }
-        Vector2 _dragStart;
-        bool _dragging;
-        Rect _rectBL;
-        Rect _rectGUI;
-        void Update()
+
+        private void Update()
         {
+            if (!enabled) return;
             if (EventSystem.current && EventSystem.current.IsPointerOverGameObject()) return;
-            if (Input.GetMouseButtonDown(0) && Input.GetKey(modifyKey))
+
+            if (Input.GetMouseButtonDown(0) && Input.GetKey(selectionModifierKey))
+                StartDragging((Vector2)Input.mousePosition);
+
+            if (_isDragging && Input.GetMouseButton(0))
+                UpdateDragRectangle((Vector2)Input.mousePosition);
+
+            if (_isDragging && Input.GetMouseButtonUp(0))
+                FinishDragging();
+        }
+
+        private void StartDragging(Vector2 screenPosition)
+        {
+            _isDragging = true;
+            _dragStartScreenPosition = screenPosition;
+            _dragRectangleScreen = new Rect(screenPosition, Vector2.zero);
+        }
+
+        private void UpdateDragRectangle(Vector2 currentScreenPosition)
+        {
+            Vector2 min = Vector2.Min(_dragStartScreenPosition, currentScreenPosition);
+            Vector2 max = Vector2.Max(_dragStartScreenPosition, currentScreenPosition);
+            _dragRectangleScreen = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        }
+
+        private void FinishDragging()
+        {
+            _isDragging = false;
+
+            bool isLargeEnough =
+                _dragRectangleScreen.width > minimumDragSizePixels &&
+                _dragRectangleScreen.height > minimumDragSizePixels;
+
+            if (!isLargeEnough) return;
+
+            List<Unit> selectedUnits = CollectUnitsInsideScreenRectangle(_dragRectangleScreen);
+
+            if (selectedUnits.Count == 0)
             {
-                _dragStart = Input.mousePosition;
-                _dragging = true;
-                UpdateRects(_dragStart, _dragStart);
+                _groupFollowers.ClearGroupAndTryVanillaDeselect();
+                return;
             }
-            if (_dragging && Input.GetMouseButton(0))
+
+            Vector2 rectangleCenter = _dragRectangleScreen.center;
+            Unit primary = NearestUnitToScreenPoint(selectedUnits, rectangleCenter);
+
+            _groupFollowers.SetGroup(selectedUnits, primary);
+            _groupFollowers.TryVanillaSelectPrimary(primary);
+        }
+
+        private List<Unit> CollectUnitsInsideScreenRectangle(Rect screenRectangle)
+        {
+            Unit[] allUnits = FindObjectsOfType<Unit>(includeInactive: false);
+            var result = new List<Unit>(allUnits.Length);
+
+            float maxDistance =
+                (maximumSelectionDistanceWorld > 0f && selectionCamera)
+                    ? Mathf.Min(maximumSelectionDistanceWorld, selectionCamera.farClipPlane)
+                    : float.PositiveInfinity;
+
+            Vector3 cameraPosition = selectionCamera ? selectionCamera.transform.position : Vector3.zero;
+
+            for (int i = 0; i < allUnits.Length; i++)
             {
-                Vector2 now = (Vector2)Input.mousePosition;
-                UpdateRects(_dragStart, now);
-            }
-            if (_dragging && Input.GetMouseButtonUp(0))
-            {
-                _dragging = false;
-                Vector2 size = new(_rectBL.width, _rectBL.height);
-                bool wasBox = Mathf.Abs(size.x) > minDragPixels && Mathf.Abs(size.y) > minDragPixels;
-                if (wasBox)
+                Unit unit = allUnits[i];
+                if (!unit) continue;
+
+                Vector3 screenPoint3D = selectionCamera.WorldToScreenPoint(unit.transform.position);
+                if (screenPoint3D.z <= 0f) continue;
+
+                Vector2 screenPoint = new Vector2(screenPoint3D.x, screenPoint3D.y);
+                if (!screenRectangle.Contains(screenPoint)) continue;
+
+                if (maxDistance != float.PositiveInfinity)
                 {
-                    List<Unit> picked = [.. CollectUnitsInside(_rectBL)];
-                    if (picked.Count == 0)
-                    {
-                        _followers.ClearGroupAndTryVanillaDeselect();
-                        return;
-                    }
-                    Vector2 center = new(_rectBL.center.x, _rectBL.center.y);
-                    Unit primary = picked
-                        .OrderBy(u => Vector2.SqrMagnitude((Vector2)worldCam.WorldToScreenPoint(u.transform.position) - center))
-                        .First();
-                    _followers.SetGroup(picked, primary);
-                    _followers.TryVanillaSelectPrimary(primary);
+                    float worldDistance = Vector3.Distance(cameraPosition, unit.transform.position);
+                    if (worldDistance > maxDistance) continue;
                 }
-                else
+
+                result.Add(unit);
+            }
+
+            return result;
+        }
+
+        private Unit NearestUnitToScreenPoint(List<Unit> units, Vector2 targetScreenPoint)
+        {
+            Unit best = null;
+            float bestSqrDistance = float.PositiveInfinity;
+
+            for (int i = 0; i < units.Count; i++)
+            {
+                Unit unit = units[i];
+                if (!unit) continue;
+
+                Vector2 unitScreenPoint = (Vector2)selectionCamera.WorldToScreenPoint(unit.transform.position);
+                float sqrDistance = (unitScreenPoint - targetScreenPoint).sqrMagnitude;
+
+                if (sqrDistance < bestSqrDistance)
                 {
-                    if (!RaycastUnitUnderMouse(out Unit unit))
-                    {
-                        _followers.ClearGroupAndTryVanillaDeselect();
-                    }
-                    else
-                    {
-                        _followers.SetGroup([unit], unit);
-                        _followers.TryVanillaSelectPrimary(unit);
-                    }
+                    bestSqrDistance = sqrDistance;
+                    best = unit;
                 }
             }
+
+            return best;
         }
-        void UpdateRects(Vector2 a, Vector2 b)
+
+        private void OnGUI()
         {
-            Vector2 min = Vector2.Min(a, b);
-            Vector2 max = Vector2.Max(a, b);
-            _rectBL = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
-            float yMinGUI = Screen.height - max.y;
-            float yMaxGUI = Screen.height - min.y;
-            _rectGUI = Rect.MinMaxRect(min.x, yMinGUI, max.x, yMaxGUI);
+            if (!_isDragging) return;
+
+            Rect guiRectangle = ScreenRectToGuiRect(_dragRectangleScreen);
+            DrawFilledRectWithBorder(guiRectangle, new Color(1f, 1f, 1f, 0.2f), new Color(1f, 1f, 1f, 0.9f), 1f);
         }
-        IEnumerable<Unit> CollectUnitsInside(Rect blRect)
+
+        private static Rect ScreenRectToGuiRect(Rect screenRect)
         {
-            Unit[] all = FindObjectsOfType<Unit>(includeInactive: false);
-            foreach (Unit u in all)
-            {
-                if (!u || !u.transform) continue;
-                Vector3 sp = worldCam.WorldToScreenPoint(u.transform.position);
-                if (sp.z < 0) continue;
-                if (blRect.Contains(new Vector2(sp.x, sp.y)))
-                    yield return u;
-            }
+            float topY = Screen.height - screenRect.yMax;
+            return new Rect(screenRect.xMin, topY, screenRect.width, screenRect.height);
         }
-        bool RaycastUnitUnderMouse(out Unit unit)
+
+        private static void DrawFilledRectWithBorder(Rect rect, Color fill, Color border, float borderThickness)
         {
-            unit = null;
-            Ray ray = worldCam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100000f))
-            {
-                unit = hit.collider.GetComponentInParent<Unit>();
-            }
-            return unit;
-        }
-        void OnGUI()
-        {
-            if (!_dragging) return;
-            DrawRect(_rectGUI, new Color(1, 1, 1, 0.2f), new Color(1, 1, 1, 0.9f), 1f);
-        }
-        static void DrawRect(Rect r, Color fill, Color border, float t)
-        {
-            Color old = GUI.color;
-            GUI.color = fill; GUI.DrawTexture(r, Texture2D.whiteTexture);
+            Color previousColor = GUI.color;
+
+            GUI.color = fill;
+            GUI.DrawTexture(rect, Texture2D.whiteTexture);
+
             GUI.color = border;
-            GUI.DrawTexture(new Rect(r.xMin, r.yMin, r.width, t), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(r.xMin, r.yMax - t, r.width, t), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(r.xMin, r.yMin, t, r.height), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(r.xMax - t, r.yMin, t, r.height), Texture2D.whiteTexture);
-            GUI.color = old;
+            GUI.DrawTexture(new Rect(rect.xMin, rect.yMin, rect.width, borderThickness), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(rect.xMin, rect.yMax - borderThickness, rect.width, borderThickness), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(rect.xMin, rect.yMin, borderThickness, rect.height), Texture2D.whiteTexture);
+            GUI.DrawTexture(new Rect(rect.xMax - borderThickness, rect.yMin, borderThickness, rect.height), Texture2D.whiteTexture);
+
+            GUI.color = previousColor;
         }
     }
-
 }

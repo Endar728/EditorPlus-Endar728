@@ -74,6 +74,12 @@ namespace EditorPlus
 
             Logger.LogDebug($"[Graph] Rebuild done: objectives={objectives.Length}, outcomes={outcomes.Length}, links={links.Count}");
         }
+        private static bool OutcomeTypeSupportsOutputs(Outcome outc)
+        {
+            if (outc == null) return false;
+            if (outc is StartObjectiveOutcome) return true;
+            return outc.SavedOutcome.Type == OutcomeType.StopOrCompleteObjective;
+        }
         private static IEnumerable<Objective> ReflectObjectives(Outcome outc)
         {
             if (outc is StartObjectiveOutcome so)
@@ -84,69 +90,43 @@ namespace EditorPlus
 
             return [];
         }
-        private static bool OutcomeTypeSupportsOutputs(Outcome outc)
-        {
-            if (outc == null) return false;
-            if (outc is StartObjectiveOutcome) return true;
-            return outc.SavedOutcome.Type == OutcomeType.StopOrCompleteObjective;
-        }
         private static IEnumerable<Func<Vector3>> EnumerateUnitWorldGetters(string uniqueId, bool isObjective)
         {
             MissionObjectives mo = MissionManager.Objectives;
             if (mo == null) yield break;
 
-            if (isObjective)
-            {
-                Objective obj = mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == uniqueId);
-                if (obj == null) yield break;
+            object source =
+                isObjective
+                ? mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == uniqueId)
+                : mo.AllOutcomes.FirstOrDefault(oc => oc.SavedOutcome.UniqueName == uniqueId);
 
-                FieldInfo fi = ReflectionUtils.FindFieldRecursive(obj.GetType(), "allItems");
-                if (fi != null && fi.GetValue(obj) is IEnumerable items)
+            if (source == null) yield break;
+            foreach (Func<Vector3> getter in EnumerateFromAny(source))
+                yield return getter;
+
+            if (!isObjective)
+            {
+                object saved = ReflectionUtils.GetPropOrFieldValue(source, "SavedOutcome");
+                if (saved != null)
+                    foreach (Func<Vector3> getter in EnumerateFromAny(saved))
+                        yield return getter;
+            }
+
+            static IEnumerable<Func<Vector3>> EnumerateFromAny(object obj)
+            {
+                foreach (SavedUnit su in ReflectionUtils.EnumerateFromObject<SavedUnit>(obj))
                 {
-                    foreach (object it in items)
-                    {
-                        if (it is SavedUnit su && su != null)
-                        {
-                            SavedUnit suLocal = su;
-                            yield return () => suLocal.globalPosition.AsVector3() + Datum.originPosition;
-                            continue;
-                        }
-
-                        if (it is SavedAirbase ab && ab != null)
-                        {
-                            SavedAirbase abLocal = ab;
-                            yield return () => abLocal.Center.AsVector3() + Datum.originPosition;
-                            continue;
-                        }
-
-                        if (it is Waypoint wp && wp != null)
-                        {
-                            Waypoint wpLocal = wp;
-                            yield return () => wpLocal.GlobalPosition.Value.AsVector3() + Datum.originPosition;
-                            continue;
-                        }
-                    }
+                    SavedUnit local = su; yield return () => local.globalPosition.AsVector3() + Datum.originPosition;
                 }
-
-                yield break;
+                foreach (var ab in ReflectionUtils.EnumerateFromObject<SavedAirbase>(obj))
+                {
+                    SavedAirbase local = ab; yield return () => local.Center.AsVector3() + Datum.originPosition;
+                }
+                foreach (var wp in ReflectionUtils.EnumerateFromObject<Waypoint>(obj))
+                {
+                    Waypoint local = wp; yield return () => local.GlobalPosition.Value.AsVector3() + Datum.originPosition;
+                }
             }
-
-            Outcome ow = mo.AllOutcomes.FirstOrDefault(oc => oc.SavedOutcome.UniqueName == uniqueId);
-            if (ow == null) yield break;
-
-            foreach (SavedUnit su in ReflectionUtils.EnumerateFromObject<SavedUnit>(ow))
-            {
-                SavedUnit local = su;
-                yield return () => local.globalPosition.AsVector3() + Datum.originPosition;
-            }
-
-            object saved = ReflectionUtils.GetPropOrFieldValue(ow, "SavedOutcome");
-            foreach (SavedUnit su in ReflectionUtils.EnumerateFromObject<SavedUnit>(saved))
-            {
-                SavedUnit local = su;
-                yield return () => local.globalPosition.AsVector3() + Datum.originPosition;
-            }
-
         }
         private static List<Objective> GetCompleteList(Outcome outc, bool createIfMissing = false)
         {
