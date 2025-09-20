@@ -6,10 +6,9 @@ namespace EditorPlus
 {
     public sealed class BoxSelection : MonoBehaviour
     {
-        public Camera selectionCamera;
         public KeyCode selectionModifierKey = KeyCode.LeftShift;
         public float minimumDragSizePixels = 6f;
-        public float maximumSelectionDistanceWorld = 0f;
+        public float maximumSelectionDistanceWorld = 0;
 
         private GroupFollowers _groupFollowers;
         private bool _isDragging;
@@ -18,12 +17,10 @@ namespace EditorPlus
 
         private void Awake()
         {
-            if (!selectionCamera) selectionCamera = Camera.main;
-
             _groupFollowers = GetComponent<GroupFollowers>();
             if (!_groupFollowers)
             {
-                Debug.LogError("BoxSelection requires GroupFollowers on the same GameObject.");
+                Plugin.Logger.LogError("BoxSelection requires GroupFollowers on the same GameObject.");
                 enabled = false;
             }
         }
@@ -85,29 +82,27 @@ namespace EditorPlus
         private List<Unit> CollectUnitsInsideScreenRectangle(Rect screenRectangle)
         {
             Unit[] allUnits = FindObjectsOfType<Unit>(includeInactive: false);
-            var result = new List<Unit>(allUnits.Length);
+            List<Unit> result = new(allUnits.Length);
 
             float maxDistance =
-                (maximumSelectionDistanceWorld > 0f && selectionCamera)
-                    ? Mathf.Min(maximumSelectionDistanceWorld, selectionCamera.farClipPlane)
+                (maximumSelectionDistanceWorld > 0f && Camera.main)
+                    ? Mathf.Min(maximumSelectionDistanceWorld, Camera.main.farClipPlane)
                     : float.PositiveInfinity;
-
-            Vector3 cameraPosition = selectionCamera ? selectionCamera.transform.position : Vector3.zero;
 
             for (int i = 0; i < allUnits.Length; i++)
             {
                 Unit unit = allUnits[i];
                 if (!unit) continue;
 
-                Vector3 screenPoint3D = selectionCamera.WorldToScreenPoint(unit.transform.position);
+                Vector3 screenPoint3D = Camera.main.WorldToScreenPoint(unit.transform.position);
                 if (screenPoint3D.z <= 0f) continue;
 
-                Vector2 screenPoint = new Vector2(screenPoint3D.x, screenPoint3D.y);
+                Vector2 screenPoint = new(screenPoint3D.x, screenPoint3D.y);
                 if (!screenRectangle.Contains(screenPoint)) continue;
 
                 if (maxDistance != float.PositiveInfinity)
                 {
-                    float worldDistance = Vector3.Distance(cameraPosition, unit.transform.position);
+                    float worldDistance = Vector3.Distance(Camera.main.transform.position, unit.transform.position);
                     if (worldDistance > maxDistance) continue;
                 }
 
@@ -127,7 +122,7 @@ namespace EditorPlus
                 Unit unit = units[i];
                 if (!unit) continue;
 
-                Vector2 unitScreenPoint = (Vector2)selectionCamera.WorldToScreenPoint(unit.transform.position);
+                Vector2 unitScreenPoint = (Vector2)Camera.main.WorldToScreenPoint(unit.transform.position);
                 float sqrDistance = (unitScreenPoint - targetScreenPoint).sqrMagnitude;
 
                 if (sqrDistance < bestSqrDistance)
@@ -145,7 +140,9 @@ namespace EditorPlus
             if (!_isDragging) return;
 
             Rect guiRectangle = ScreenRectToGuiRect(_dragRectangleScreen);
-            DrawFilledRectWithBorder(guiRectangle, new Color(1f, 1f, 1f, 0.2f), new Color(1f, 1f, 1f, 0.9f), 1f);
+            Color fillColor = new(0f, 0f, 0f, 0.2f);
+            Color edgeColor = new(1f, 1f, 1f, 0.9f);
+            DrawFilledRectWithBorder(guiRectangle, fillColor, edgeColor, 1f);
         }
 
         private static Rect ScreenRectToGuiRect(Rect screenRect)

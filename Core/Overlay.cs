@@ -10,6 +10,7 @@ using TMPro;
 using System.Linq;
 using System.Reflection;
 using System.IO;
+using System.Collections;
 
 namespace EditorPlus
 {
@@ -162,9 +163,110 @@ namespace EditorPlus
             _view.OnEditObjective = id => StartCoroutine(OpenAndEditObjective(id));
             _view.OnEditOutcome = id => StartCoroutine(OpenAndEditOutcome(id));
             _view.QueryUnitWorldPositions = (id, isObj) => EnumerateUnitWorldGetters(id, isObj);
+            _view.OnRequestAddSelectionToNode = (id, isObj) => TryAddCurrentSelectionToNode(id, isObj);
             _overlayRoot.SetActive(false);
             return true;
         }
+        private void TryAddCurrentSelectionToNode(string id, bool isObjective)
+        {
+            var gf = FindObjectOfType<GroupFollowers>();
+            if (!gf) { Logger.LogWarning("[Graph] No GroupFollowers found."); return; }
+
+            var units = gf.CurrentUnits;
+            if (units == null || units.Count == 0) { Logger.LogInfo("[Graph] No units currently selected."); return; }
+
+            var mo = MissionManager.Objectives;
+            if (mo == null) return;
+
+            // Collect SavedUnit objects, unique by reference
+            var sel = new List<NuclearOption.SavedMission.SavedUnit>();
+            foreach (var u in units)
+            {
+                if (u != null) // for UnityEngine.Object, keeps destroyed-object semantics
+                {
+                    var su = u.SavedUnit;
+                    if (su != null && !sel.Contains(su))
+                        sel.Add(su);
+                }
+            }
+
+            if (sel.Count == 0) { Logger.LogInfo("[Graph] Selected units had no SavedUnit."); return; }
+
+            if (isObjective)
+            {
+                var obj = mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == id);
+                if (obj == null) { Logger.LogWarning($"[Graph] Objective '{id}' not found."); return; }
+
+                var fi = ReflectionUtils.FindFieldRecursive(obj.GetType(), "allItems");
+                if (fi == null) { Logger.LogWarning($"[Graph] Objective '{id}' has no 'allItems' field."); return; }
+
+                if (fi.GetValue(obj) is System.Collections.IList list)
+                {
+                    int added = 0;
+                    foreach (var su in sel)
+                    {
+                        if (!ContainsSavedUnit(list, su)) { list.Add(su); added++; }
+                    }
+
+                    if (added > 0)
+                    {
+                        Logger.LogInfo($"[Graph] Added {added} unit(s) to objective '{id}'.");
+                        SceneSingleton<MissionEditor>.i?.CheckAutoSave();
+                    }
+                    else Logger.LogInfo($"[Graph] No new units to add to objective '{id}'.");
+                }
+                return;
+            }
+            else
+            {
+                var oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == id);
+                if (oc == null) { Logger.LogWarning($"[Graph] Outcome '{id}' not found."); return; }
+
+                // Try find a List<SavedUnit> either on the runtime outcome or its SavedOutcome
+                var list = FindSavedUnitList(oc) ?? FindSavedUnitList(ReflectionUtils.GetPropOrFieldValue(oc, "SavedOutcome"));
+                if (list == null) { Logger.LogWarning($"[Graph] No editable SavedUnit list found on outcome '{id}'."); return; }
+
+                int added = 0;
+                foreach (var su in sel)
+                    if (!ContainsSavedUnit(list, su)) { list.Add(su); added++; }
+
+                if (added > 0)
+                {
+                    Logger.LogInfo($"[Graph] Added {added} unit(s) to outcome '{id}'.");
+                    SceneSingleton<MissionEditor>.i?.CheckAutoSave();
+                }
+                else Logger.LogInfo($"[Graph] No new units to add to outcome '{id}'.");
+            }
+        }
+
+        private static bool ContainsSavedUnit(IList list, NuclearOption.SavedMission.SavedUnit su)
+        {
+            foreach (var it in list)
+                if (ReferenceEquals(it, su)) return true;
+            return false;
+        }
+
+        private static IList FindSavedUnitList(object host)
+        {
+            if (host == null) return null;
+            foreach (var f in host.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (!typeof(IList).IsAssignableFrom(f.FieldType)) continue;
+                var elem = f.FieldType.IsGenericType ? f.FieldType.GetGenericArguments()[0] : null;
+                if (elem != typeof(NuclearOption.SavedMission.SavedUnit)) continue;
+
+                var list = (IList)f.GetValue(host);
+                if (list == null && f.FieldType.IsGenericType)
+                {
+                    var listType = typeof(List<>).MakeGenericType(elem);
+                    list = (IList)Activator.CreateInstance(listType);
+                    f.SetValue(host, list);
+                }
+                return list;
+            }
+            return null;
+        }
+
         private bool TryLoadEmbeddedBundle()
         {
             string resName = Assembly.GetExecutingAssembly().GetManifestResourceNames()

@@ -13,9 +13,9 @@ namespace EditorPlus
         IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler,
         IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-
+         
         [Header("UI refs")]
-        [SerializeField] private Text title;
+        [SerializeField] private Text title; 
         [SerializeField] private Text subtitle;
         [SerializeField] private Image bg;
 
@@ -77,7 +77,11 @@ namespace EditorPlus
             var threshold = EventSystem.current ? EventSystem.current.pixelDragThreshold : 5;
             if (_beganDrag) return;
             if ((e.position - _pressScreenPos).sqrMagnitude > threshold * threshold) return;
-
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _graph?.RequestAddSelectionToNode(this);
+                return;
+            }
             if (e.clickCount > 1)
             {
                 if (Kind == NodeKind.Objective) _graph?.OnEditObjective?.Invoke(Id);

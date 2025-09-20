@@ -31,6 +31,11 @@ namespace EditorPlus
             EnsureEdgesContainer();
             UpdateGridUV();
         }
+        public Action<string, bool> OnRequestAddSelectionToNode; 
+        internal void RequestAddSelectionToNode(NodeView n)
+        {
+            OnRequestAddSelectionToNode?.Invoke(n.Id, n.Kind == NodeKind.Objective);
+        }
 
         private void AutoWire()
         {

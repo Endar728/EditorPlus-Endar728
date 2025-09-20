@@ -17,6 +17,7 @@ namespace EditorPlus
         private Coroutine _nullSelectRoutine;
         private string _lastPrimaryFaction;
         private readonly List<Unit> _group = [];
+        public IReadOnlyList<Unit> CurrentUnits => _group;
         private Unit _primary;
         private GlobalPosition _primStartPos;
         private Quaternion _primStartRot = Quaternion.identity;
