@@ -1,13 +1,28 @@
 # EditorPlus
 
-A bepinex mod to enhance your Nuclear Option mission editor experience. Adds a new nodegraph based objective/outcome UI, click and drag on the ports to change connections. full controls list is in the included readme
+A bepinex mod to enhance the Nuclear Option mission editor experience.
 
-this is quite an early beta build, no guarantees that it wont corrupt your mission file (this hasn't actually happened in my testing yet tho). 
+### New UI
+* Nodegraph-based objective/outcome UI, click and drag on ports to change connections, hover over a connection or port and press delete to remove connections.
+* Ghost lines from nodes to units, airbases, and waypoints.
+* Add selected units to a node: open Node UI, hover the node, Shift + LMB.
 
-If you encounter any bugs then please report them.
-I have many ideas on what to add in the future, but any requests are welcome.
-Feedback is appreciated, especially on how to improve the visual design 
+### Group unit selection
+* Group selection: `Shift` + `LMB` drag to box select; click any selected unit to set the pivot.
+* Remove and Faction settings apply to all selected units.
 
+### Unit placement
+* Rapid placement of units while holding `Ctrl`.
+* Toggle to enable hold position when placing new units.
+* Grid snapping (WIP).
+* Toggle terrain collision.
+* hold `Ctrl` to switch between position and rotation.
+* Removed height limits.
+
+### other
+* Extended all dropdowns.
+
+If you encounter any bugs then please report them. Feedback is appreciated!
 <img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/6489d11f-7bdb-4868-85cf-6edbeec75d87" />
 
 
