@@ -1,4 +1,4 @@
-# EditorPlus
+# EditorPlus (OUTDATED)
 
 A bepinex mod to enhance the Nuclear Option mission editor experience.
 
