@@ -12,8 +12,13 @@
 
 ### Version 1.5.0 (Current) - Updated by Endar728
 - **Release Date**: 2026-03-10
-- **Major Features Added**: Copy-paste functionality, enhanced hold position system, no clip mode
+- **Major Features Added**: 
+  - **Copy-paste functionality** (NEW - did not exist in v1.4.2)
+  - Enhanced hold position system (improvements to existing feature)
+  - Enhanced no clip mode (improvements to existing feature)
+  - Free camera collision disabled (NEW)
 - **Critical Bug Fix**: Fixed copy-paste/duplicate name collision bug
+- **What's New**: This version adds complete copy-paste functionality (Ctrl+C/V/D) which was completely absent from v1.4.2
 
 ### Version 1.4.2 - Original by nikkorap
 - Base EditorPlus functionality
@@ -21,6 +26,7 @@
 - Group selection
 - Hold position toggle
 - Terrain collision toggle
+- **Note**: Copy-paste functionality was NOT included in v1.4.2
 
 ---
 
@@ -58,8 +64,14 @@
 
 ## New Features Added by Endar728 (v1.4.2 → v1.5.0)
 
+> **Important**: All features listed below were NOT present in v1.4.2. They are completely new additions by Endar728 in v1.5.0.
+
 ### Copy-Paste Functionality
-**Completely new feature system integrated into EditorPlus**
+**⚠️ NEW IN v1.5.0 - This feature did NOT exist in v1.4.2**
+
+**Completely new feature system integrated into EditorPlus by Endar728**
+
+Copy-paste functionality is a brand new feature that was added in v1.5.0. The original v1.4.2 by nikkorap did not include any copy-paste capabilities. This entire system was designed and implemented by Endar728.
 
 #### Keyboard Shortcuts
 - **Ctrl+C**: Copy selected units to clipboard
@@ -98,7 +110,9 @@
 - **Unique name generation**: Each pasted/duplicated unit receives a unique name to prevent mission corruption
 
 ### Enhanced Hold Position System
-**Significant improvements to existing hold position feature**
+**⚠️ ENHANCED IN v1.5.0 - Significant improvements to existing hold position feature**
+
+**Note**: Hold position toggle existed in v1.4.2, but the continuous monitoring, copy-paste integration, and enhanced enforcement are new additions by Endar728.
 
 - **Continuous monitoring**: Background monitor ensures hold position is maintained even if other code tries to reset it
 - **Multiple protection layers**: 
@@ -111,7 +125,9 @@
 - **Aggressive enforcement**: Multiple layers of protection prevent hold position from being cleared
 
 ### No Clip Functionality
-**Enhanced terrain ignore mode**
+**⚠️ ENHANCED IN v1.5.0 - Enhanced terrain ignore mode**
+
+**Note**: Basic terrain collision toggle existed in v1.4.2, but the enhanced no clip system with position preservation, copy-paste support, and clamp prevention are new additions by Endar728.
 
 - **Terrain ignore mode**: Units can be placed and moved without terrain clamping
 - **Position preservation**: No clip positions are maintained through unit registration and copy-paste operations
@@ -120,7 +136,9 @@
 - **Copy-paste support**: No clip positions are preserved when copying and pasting units
 
 ### Free Camera Enhancement
-**New feature for better camera control**
+**⚠️ NEW IN v1.5.0 - New feature for better camera control**
+
+This feature did not exist in v1.4.2. It was added by Endar728 in v1.5.0.
 
 - **Collision disabled**: Free camera movement without collision constraints
 - **Automatic detection**: Automatically finds and disables camera collision
@@ -236,10 +254,10 @@
 - **Harmony Patches Added**: 7 new patches
 
 ### Feature Breakdown
-- **Copy-Paste System**: Complete new feature system with 3 keyboard shortcuts
-- **Hold Position Enhancement**: Significant improvements to existing feature
-- **No Clip System**: Enhanced terrain ignore functionality
-- **Free Camera**: New camera collision disabling feature
+- **Copy-Paste System**: ⚠️ **BRAND NEW** - Complete new feature system with 3 keyboard shortcuts (Ctrl+C/V/D). This did NOT exist in v1.4.2.
+- **Hold Position Enhancement**: Significant improvements to existing feature from v1.4.2
+- **No Clip System**: Enhanced terrain ignore functionality (basic toggle existed in v1.4.2, enhancements are new)
+- **Free Camera**: ⚠️ **NEW** - Camera collision disabling feature (did not exist in v1.4.2)
 
 ---
 
