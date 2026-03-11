@@ -1,0 +1,309 @@
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.deps.json
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Assembly-CSharp-firstpass.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Assembly-CSharp.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Mirage.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.InputSystem.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.TextMeshPro.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AssetBundleModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.CoreModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.IMGUIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.InputLegacyModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.JSONSerializeModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.Physics2DModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.PhysicsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TextRenderingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UI.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UniTask.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AudioModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.RenderPipelines.Universal.Runtime.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.RenderPipelines.Core.Runtime.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\JamesFrowen.Graphy.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Rewired_Core.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ParticleSystemModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\JamesFrowen.ScriptableVariables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.WindModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\ProfanityDetector.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Mirage.SocketLayer.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Mirage.Sockets.Udp.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\com.rlabrecque.steamworks.net.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Interop.SpeechLib.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.ResourceManager.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.Addressables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AnimationModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\StandaloneFileBrowser.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Mirage.SteamworksSocket.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\RuntimeTransformHandle.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.Burst.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.Mathematics.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestTextureModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ImageConversionModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UniTask.Addressables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Rewired_Windows.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.SharedInternalsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.DSPGraphModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityCurlModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ContentLoadModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.PropertiesModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TLSModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AndroidJNIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AccessibilityModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityConnectModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.AIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsCommonModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.PerformanceReportingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ClothModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ClusterInputModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ClusterRendererModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.CrashReportingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TilemapModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TerrainModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.VFXModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.VideoModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.VRModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.GridModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.SubsystemsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.LocalizationModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAssetBundleModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAudioModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestWWWModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.NVIDIAModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.DirectorModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.VirtualTexturingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ScreenCaptureModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.GameCenterModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.SpriteMaskModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.StreamingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TerrainPhysicsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TextCoreFontEngineModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.TextCoreTextEngineModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.SpriteShapeModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.UIElementsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.VehiclesModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.XRModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.ARModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\UnityEngine.InputModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.RenderPipeline.Universal.ShaderLibrary.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\System.Windows.Forms.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Ookii.Dialogs.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\bin\Release\netstandard2.1\Unity.Burst.Unsafe.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.csproj.AssemblyReference.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\MyPluginInfo.cs
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.AssemblyInfoInputs.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.AssemblyInfo.cs
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.csproj.CoreCompileInputs.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\EditorPlus.csproj.Up2Date
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.deps.json
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Assembly-CSharp-firstpass.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Assembly-CSharp.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.InputSystem.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.TextMeshPro.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AssetBundleModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.CoreModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.IMGUIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.InputLegacyModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.JSONSerializeModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.Physics2DModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PhysicsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextRenderingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UI.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UniTask.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AudioModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipelines.Universal.Runtime.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipelines.Core.Runtime.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\JamesFrowen.Graphy.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Rewired_Core.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ParticleSystemModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\JamesFrowen.ScriptableVariables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.WindModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\ProfanityDetector.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.SocketLayer.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.Sockets.Udp.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.rlabrecque.steamworks.net.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Interop.SpeechLib.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.ResourceManager.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Addressables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AnimationModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\StandaloneFileBrowser.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.SteamworksSocket.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\RuntimeTransformHandle.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Burst.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Mathematics.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestTextureModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ImageConversionModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UniTask.Addressables.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Rewired_Windows.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SharedInternalsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.DSPGraphModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityCurlModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ContentLoadModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PropertiesModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TLSModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AndroidJNIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AccessibilityModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityConnectModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AIModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsCommonModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PerformanceReportingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClothModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClusterInputModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClusterRendererModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.CrashReportingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TilemapModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TerrainModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VFXModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VideoModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VRModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.GridModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SubsystemsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.LocalizationModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAssetBundleModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAudioModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestWWWModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.NVIDIAModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.DirectorModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VirtualTexturingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ScreenCaptureModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.GameCenterModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SpriteMaskModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.StreamingModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TerrainPhysicsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextCoreFontEngineModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextCoreTextEngineModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SpriteShapeModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UIElementsModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VehiclesModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.XRModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ARModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.InputModule.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipeline.Universal.ShaderLibrary.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\System.Windows.Forms.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Ookii.Dialogs.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Burst.Unsafe.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.AssemblyReference.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\MyPluginInfo.cs
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.AssemblyInfoInputs.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.AssemblyInfo.cs
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.CoreCompileInputs.cache
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.Up2Date
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\ATF MISSION EDITOR MODS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.deps.json
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Assembly-CSharp-firstpass.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Assembly-CSharp.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.InputSystem.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.TextMeshPro.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AssetBundleModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.CoreModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.IMGUIModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.InputLegacyModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.JSONSerializeModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.Physics2DModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PhysicsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextRenderingModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UI.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UIModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UniTask.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AudioModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipelines.Universal.Runtime.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipelines.Core.Runtime.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\JamesFrowen.Graphy.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Rewired_Core.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ParticleSystemModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\JamesFrowen.ScriptableVariables.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.WindModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\ProfanityDetector.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.SocketLayer.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.Sockets.Udp.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\com.rlabrecque.steamworks.net.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Interop.SpeechLib.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.ResourceManager.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Addressables.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AnimationModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\StandaloneFileBrowser.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Mirage.SteamworksSocket.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\RuntimeTransformHandle.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Burst.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Mathematics.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestTextureModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ImageConversionModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UniTask.Addressables.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Rewired_Windows.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SharedInternalsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.DSPGraphModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityCurlModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ContentLoadModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PropertiesModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TLSModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AndroidJNIModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AccessibilityModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityConnectModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.AIModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityAnalyticsCommonModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.PerformanceReportingModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClothModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClusterInputModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ClusterRendererModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.CrashReportingModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TilemapModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TerrainModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VFXModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VideoModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VRModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.GridModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SubsystemsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.LocalizationModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAssetBundleModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestAudioModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UnityWebRequestWWWModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.NVIDIAModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.DirectorModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VirtualTexturingModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ScreenCaptureModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.GameCenterModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SpriteMaskModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.StreamingModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TerrainPhysicsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextCoreFontEngineModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.TextCoreTextEngineModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.SpriteShapeModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.UIElementsModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.VehiclesModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.XRModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.ARModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\UnityEngine.InputModule.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.RenderPipeline.Universal.ShaderLibrary.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\System.Windows.Forms.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Ookii.Dialogs.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\bin\Release\netstandard2.1\Unity.Burst.Unsafe.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.AssemblyReference.cache
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\MyPluginInfo.cs
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.AssemblyInfoInputs.cache
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.AssemblyInfo.cs
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.CoreCompileInputs.cache
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\EditorPlus.csproj.Up2Date
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.dll
+C:\Users\dexte\Desktop\MODDING PROJECTS\EditorPlus-1.4.2_withcopy&paste\obj\Release\netstandard2.1\com.nikkorap.EditorPlus.pdb

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +7,7 @@ namespace EditorPlus
     public sealed class BoxSelection : MonoBehaviour
     {
         public KeyCode selectionModifierKey = KeyCode.LeftShift;
-        public float minimumDragSizePixels = 6f;
+        public float minimumDragSizePixels = 4f;
         public float maximumSelectionDistanceWorld = 0;
 
         private GroupFollowers _groupFollowers;
@@ -28,16 +28,22 @@ namespace EditorPlus
         private void Update()
         {
             if (!enabled) return;
-            if (EventSystem.current && EventSystem.current.IsPointerOverGameObject()) return;
 
-            if (Input.GetMouseButtonDown(0) && Input.GetKey(selectionModifierKey))
-                StartDragging((Vector2)Input.mousePosition);
+            bool pointerOverUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
-            if (_isDragging && Input.GetMouseButton(0))
-                UpdateDragRectangle((Vector2)Input.mousePosition);
-
-            if (_isDragging && Input.GetMouseButtonUp(0))
-                FinishDragging();
+            if (!_isDragging)
+            {
+                if (pointerOverUi) return;
+                if (Input.GetMouseButtonDown(0) && Input.GetKey(selectionModifierKey))
+                    StartDragging((Vector2)Input.mousePosition);
+            }
+            else
+            {
+                if (Input.GetMouseButton(0))
+                    UpdateDragRectangle((Vector2)Input.mousePosition);
+                if (Input.GetMouseButtonUp(0))
+                    FinishDragging();
+            }
         }
 
         private void StartDragging(Vector2 screenPosition)

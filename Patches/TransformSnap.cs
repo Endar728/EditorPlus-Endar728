@@ -8,7 +8,9 @@ make snapping snap to global positions
 using HarmonyLib;
 using NuclearOption.MissionEditorScripts;
 using NuclearOption.SavedMission.ObjectiveV2;
+#if !NO_RUNTIME_TRANSFORM_HANDLE
 using RuntimeHandle;
+#endif
 using System.Globalization;
 using System;
 using TMPro;
@@ -17,6 +19,7 @@ using UnityEngine;
 
 namespace EditorPlus.Patches
 {
+#if !NO_RUNTIME_TRANSFORM_HANDLE
     [HarmonyPatch(typeof(Vector3DataField), "Setup", [typeof(string), typeof(IValueWrapper<Vector3>)])]
     static class Snap_Patch
     {
@@ -43,9 +46,14 @@ namespace EditorPlus.Patches
             }
         }
 
+#if !NO_RUNTIME_TRANSFORM_HANDLE
         static RuntimeTransformHandle _cachedHandle;
         static RuntimeTransformHandle GetHandle() =>
             _cachedHandle ? _cachedHandle : (_cachedHandle = UnityEngine.Object.FindObjectOfType<RuntimeTransformHandle>());
+#else
+        static object _cachedHandle;
+        static object GetHandle() => null;
+#endif
 
 
         static TMP_InputField CloneSnap(TMP_InputField template, Transform parent, string name, bool isPos)
@@ -62,9 +70,13 @@ namespace EditorPlus.Patches
             LayoutElement le = snap.GetComponent<LayoutElement>() ?? go.AddComponent<LayoutElement>();
             le.minWidth = 55f;
 
-            RuntimeTransformHandle h = GetHandle();
+#if !NO_RUNTIME_TRANSFORM_HANDLE
+            RuntimeTransformHandle h = GetHandle() as RuntimeTransformHandle;
 
             float value = h ? isPos ? h.positionSnap.x : h.rotationSnap : 0f;
+#else
+            float value = 0f;
+#endif
             snap.SetTextWithoutNotify(value.ToString(CultureInfo.InvariantCulture));
 
             snap.onEndEdit.AddListener(v =>
@@ -72,14 +84,17 @@ namespace EditorPlus.Patches
                 if (!float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out float val)) return;
                 val = Mathf.Max(0f, val);
 
-                RuntimeTransformHandle handle = GetHandle();
+#if !NO_RUNTIME_TRANSFORM_HANDLE
+                RuntimeTransformHandle handle = GetHandle() as RuntimeTransformHandle;
                 if (!handle) return;
 
                 if (isPos) handle.positionSnap = new Vector3(val, val, val);
                 else handle.rotationSnap = val;
+#endif
             });
 
             return snap;
         }
     }
+#endif
 }

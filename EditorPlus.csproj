@@ -4,12 +4,11 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>com.nikkorap.EditorPlus</AssemblyName>
     <Product>editorplus</Product>
-    <Version>1.4.2</Version>
+    <Version>1.5.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <RestoreAdditionalProjectSources>
-      https:
-	  api.nuget.org/v3/index.json;
+      https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
@@ -18,6 +17,8 @@
 
   <ItemGroup>
     <None Remove="editorplus_ui.noep" />
+    <Compile Remove="original/**" />
+    <None Remove="original/**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +36,22 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
     <Reference Include="Mirage">
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\Mirage.dll</HintPath>
     </Reference>
-    <Reference Include="RuntimeTransformHandle">
+    <Reference Include="RuntimeTransformHandle" Condition="Exists('..\CustomAssets.Placeholders\bin\Debug\netstandard2.1\RuntimeTransformHandle.dll')">
       <HintPath>..\CustomAssets.Placeholders\bin\Debug\netstandard2.1\RuntimeTransformHandle.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem">
@@ -75,4 +88,8 @@
       <HintPath>D:\SteamLibrary\steamapps\common\Nuclear Option\NuclearOption_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+  
+  <PropertyGroup Condition="!Exists('..\CustomAssets.Placeholders\bin\Debug\netstandard2.1\RuntimeTransformHandle.dll')">
+    <DefineConstants>$(DefineConstants);NO_RUNTIME_TRANSFORM_HANDLE</DefineConstants>
+  </PropertyGroup>
 </Project>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.UI;
@@ -78,7 +78,8 @@ namespace EditorPlus
                 {
                     Logger.LogInfo($"[MissionGraph] LINK request: {fromId}({(fromIsObj ? "OBJ" : "OUT")}) > {toId}({(toIsObj ? "OBJ" : "OUT")})");
 
-                    MissionObjectives mo = MissionManager.Objectives;
+                    MissionObjectives mo = ReflectionUtils.GetMissionObjectives();
+                    if (mo == null) return;
                     Objective o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
                     Outcome oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
 
@@ -124,7 +125,8 @@ namespace EditorPlus
                 {
                     Logger.LogInfo($"[MissionGraph] UNLINK request: {fromId}({(fromIsObj ? "OBJ" : "OUT")}) > {toId}({(toIsObj ? "OBJ" : "OUT")})");
 
-                    MissionObjectives mo = MissionManager.Objectives;
+                    MissionObjectives mo = ReflectionUtils.GetMissionObjectives();
+                    if (mo == null) return;
                     Objective o = mo.AllObjectives.FirstOrDefault(x => x.SavedObjective.UniqueName == (fromIsObj ? fromId : toId));
                     Outcome oc = mo.AllOutcomes.FirstOrDefault(x => x.SavedOutcome.UniqueName == (fromIsObj ? toId : fromId));
                     if (o == null || oc == null)
@@ -175,7 +177,7 @@ namespace EditorPlus
             var units = gf.CurrentUnits;
             if (units == null || units.Count == 0) { Logger.LogInfo("[Graph] No units currently selected."); return; }
 
-            var mo = MissionManager.Objectives;
+            var mo = ReflectionUtils.GetMissionObjectives();
             if (mo == null) return;
 
             // Collect SavedUnit objects, unique by reference
@@ -197,24 +199,30 @@ namespace EditorPlus
                 var obj = mo.AllObjectives.FirstOrDefault(o => o.SavedObjective.UniqueName == id);
                 if (obj == null) { Logger.LogWarning($"[Graph] Objective '{id}' not found."); return; }
 
+                // Find the list that holds SavedUnits: try runtime Objective first (original mod used "allItems"), then SavedObjective
+                System.Collections.IList list = null;
                 var fi = ReflectionUtils.FindFieldRecursive(obj.GetType(), "allItems");
-                if (fi == null) { Logger.LogWarning($"[Graph] Objective '{id}' has no 'allItems' field."); return; }
+                if (fi != null && fi.GetValue(obj) is System.Collections.IList l)
+                    list = l;
+                if (list == null)
+                    list = FindSavedUnitList(obj);
+                if (list == null)
+                    list = FindSavedUnitList(ReflectionUtils.GetPropOrFieldValue(obj, "SavedObjective"));
 
-                if (fi.GetValue(obj) is System.Collections.IList list)
+                if (list == null) { Logger.LogWarning($"[Graph] Objective '{id}' has no editable unit list (tried allItems, and List<SavedUnit> on objective/SavedObjective)."); return; }
+
+                int added = 0;
+                foreach (var su in sel)
                 {
-                    int added = 0;
-                    foreach (var su in sel)
-                    {
-                        if (!ContainsSavedUnit(list, su)) { list.Add(su); added++; }
-                    }
-
-                    if (added > 0)
-                    {
-                        Logger.LogInfo($"[Graph] Added {added} unit(s) to objective '{id}'.");
-                        SceneSingleton<MissionEditor>.i?.CheckAutoSave();
-                    }
-                    else Logger.LogInfo($"[Graph] No new units to add to objective '{id}'.");
+                    if (!ContainsSavedUnit(list, su)) { list.Add(su); added++; }
                 }
+
+                if (added > 0)
+                {
+                    Logger.LogInfo($"[Graph] Added {added} unit(s) to objective '{id}'.");
+                    SceneSingleton<MissionEditor>.i?.CheckAutoSave();
+                }
+                else Logger.LogInfo($"[Graph] No new units to add to objective '{id}'.");
                 return;
             }
             else
@@ -393,11 +401,14 @@ namespace EditorPlus
 
             if (_overlayToggleButton && _gridToggleButton && _holdPosToggle) return true;
 
-            objectivesBtn = FindObjectsOfType<ChangeTabButton>(true)
-                .FirstOrDefault(b => b && string.Equals(b.name, "ObjectivesButton", StringComparison.OrdinalIgnoreCase));
-            if (!objectivesBtn) return false;
+            if (objectivesBtn == null)
+            {
+                var buttons = FindObjectsOfType<MonoBehaviour>(true);
+                objectivesBtn = buttons.FirstOrDefault(b => b && string.Equals(b.name, "ObjectivesButton", StringComparison.OrdinalIgnoreCase));
+            }
+            if (objectivesBtn == null) return false;
 
-            Button template = objectivesBtn.GetComponent<Button>();
+            Button template = (objectivesBtn as MonoBehaviour)?.GetComponent<Button>();
             if (!template) return false;
 
             Transform parent = template.transform?.parent;

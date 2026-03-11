@@ -19,7 +19,7 @@ namespace EditorPlus
 
             Logger.LogDebug("[Graph] Rebuild start");
 
-            MissionObjectives mo = MissionManager.Objectives;
+            MissionObjectives mo = ReflectionUtils.GetMissionObjectives();
             if (mo == null) return;
 
             GraphView.ObjectiveDTO[] objectives = [.. mo.AllObjectives.Select(o => new GraphView.ObjectiveDTO
@@ -92,7 +92,7 @@ namespace EditorPlus
         }
         private static IEnumerable<Func<Vector3>> EnumerateUnitWorldGetters(string uniqueId, bool isObjective)
         {
-            MissionObjectives mo = MissionManager.Objectives;
+            MissionObjectives mo = ReflectionUtils.GetMissionObjectives();
             if (mo == null) yield break;
 
             object source =

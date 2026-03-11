@@ -1,12 +1,15 @@
 ﻿using HarmonyLib;
 using NuclearOption.MissionEditorScripts;
+#if !NO_RUNTIME_TRANSFORM_HANDLE
 using RuntimeHandle;
+#endif
 using System;
 using System.Reflection;
 using UnityEngine;
 
 namespace EditorPlus.Patches
 {
+#if !NO_RUNTIME_TRANSFORM_HANDLE
     [HarmonyPatch(typeof(EditorHandle), "Update")]
     static class EditorHandle_Fast_Rotate
     {
@@ -41,4 +44,5 @@ namespace EditorPlus.Patches
                 _setMode(__instance, _overrideType, false);
         }
     }
+#endif
 }
