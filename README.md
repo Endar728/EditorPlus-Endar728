@@ -1,4 +1,4 @@
-# EditorPlus - Credits and Features
+# EditorPlus - Updated as of 2026/03/10
 
 ## Original Creator
 **nikkorap** - Created the original EditorPlus mod
