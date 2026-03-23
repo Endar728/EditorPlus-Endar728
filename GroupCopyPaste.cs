@@ -24,112 +24,53 @@ namespace EditorPlus
                 return;
             }
 
-            // Try to get selection from GroupFollowers first (mass selection)
+            // Prefer whichever source has MORE units so vanilla multi-select wins over a stale
+            // single-unit GroupFollowers group; box-select still wins when vanilla only reports primary.
             var groupFollowers = UnityEngine.Object.FindObjectOfType<GroupFollowers>();
-            
-            if (groupFollowers != null && groupFollowers.CurrentUnits != null && groupFollowers.CurrentUnits.Count > 0)
+            List<Unit> unitsToCopy = EditorSelectionHelper.ResolveSelectedUnits(selection, groupFollowers, out string sourceLabel);
+
+            if (unitsToCopy == null || unitsToCopy.Count == 0)
             {
-                // Use mass selection from EditorPlus
-                var unitsToCopy = groupFollowers.CurrentUnits;
-                Log.LogInfo($"[EditorPlus] Using GroupFollowers selection: {unitsToCopy.Count} units");
+                Log.LogWarning("[EditorPlus] Nothing selected");
+                return;
+            }
 
-                // Calculate group center using GlobalPosition (not local transform)
-                Vector3 center = Vector3.zero;
-                int validCount = 0;
-                foreach (var unit in unitsToCopy)
-                {
-                    if (unit?.SavedUnit != null)
-                    {
-                        center += unit.SavedUnit.globalPosition.AsVector3();
-                        validCount++;
-                    }
-                }
-                if (validCount == 0)
-                {
-                    Log.LogWarning("[EditorPlus] No valid units with SavedUnit");
-                    return;
-                }
-                center /= validCount;
+            Log.LogInfo($"[EditorPlus] Copy selection source: {sourceLabel}, {unitsToCopy.Count} unit(s)");
 
-                // Store the original center Y for height preservation
-                GroupClipboard.OriginalCenterY = center.y;
-
-                // Store clipboard data with global position offsets - clear first to prevent accumulation
-                GroupClipboard.Clear();
-                GroupClipboard.OriginalCenterY = center.y; // Restore after clear
-                foreach (var unit in unitsToCopy)
+            // Centroid in Unity world space so offsets match what you see; mixing mission AsVector3() with
+            // paste ToGlobalPosition() was stacking every unit on the cursor.
+            Vector3 center = Vector3.zero;
+            int validCount = 0;
+            foreach (var unit in unitsToCopy)
+            {
+                if (unit?.SavedUnit != null)
                 {
-                    if (unit?.SavedUnit == null) continue;
-                    
-                    GroupClipboard.Items.Add(new CopiedUnitData
-                    {
-                        Type = unit.SavedUnit.type,
-                        Faction = unit.SavedUnit.faction,
-                        RelativeOffset = unit.SavedUnit.globalPosition.AsVector3() - center,
-                        Rotation = unit.SavedUnit.rotation,
-                        SourceSaved = unit.SavedUnit
-                    });
+                    center += unit.transform.position;
+                    validCount++;
                 }
             }
-            else
+            if (validCount == 0)
             {
-                // Fallback to vanilla selection
-                var details = selection.SelectionDetails;
-                if (details == null)
-                {
-                    Log.LogWarning("[EditorPlus] Nothing selected");
-                    return;
-                }
+                Log.LogWarning("[EditorPlus] No valid units with SavedUnit");
+                return;
+            }
+            center /= validCount;
 
-                var unitDetails = new List<UnitSelectionDetails>();
+            GroupClipboard.Clear();
+            foreach (var unit in unitsToCopy)
+            {
+                if (unit?.SavedUnit == null) continue;
 
-                if (details is MultiSelectSelectionDetails multi)
+                GroupClipboard.Items.Add(new CopiedUnitData
                 {
-                    foreach (var item in multi.Items)
-                    {
-                        if (item is UnitSelectionDetails usd)
-                            unitDetails.Add(usd);
-                    }
-                }
-                else if (details is UnitSelectionDetails single)
-                {
-                    unitDetails.Add(single);
-                }
-
-                if (unitDetails.Count == 0)
-                {
-                    Log.LogWarning("[EditorPlus] No units in selection");
-                    return;
-                }
-
-                // Calculate group center using GlobalPosition (not local transform)
-                Vector3 center = Vector3.zero;
-                foreach (var ud in unitDetails)
-                {
-                    if (ud?.SavedUnit != null)
-                        center += ud.SavedUnit.globalPosition.AsVector3();
-                }
-                center /= unitDetails.Count;
-
-                // Store the original center Y for height preservation
-                GroupClipboard.OriginalCenterY = center.y;
-
-                // Store clipboard data with global position offsets
-                GroupClipboard.Clear();
-                GroupClipboard.OriginalCenterY = center.y; // Restore after clear
-                foreach (var ud in unitDetails)
-                {
-                    if (ud?.SavedUnit == null) continue;
-                    
-                    GroupClipboard.Items.Add(new CopiedUnitData
-                    {
-                        Type = ud.SavedUnit.type,
-                        Faction = ud.SavedUnit.faction,
-                        RelativeOffset = ud.SavedUnit.globalPosition.AsVector3() - center,
-                        Rotation = ud.SavedUnit.rotation,
-                        SourceSaved = ud.SavedUnit
-                    });
-                }
+                    Type = unit.SavedUnit.type,
+                    Faction = unit.SavedUnit.faction,
+                    RelativeOffset = unit.transform.position - center,
+                    // Match world pose: offsets use transform.position; SavedUnit.rotation can lag behind
+                    // gizmo / GroupFollowers edits until the mission re-saves, so pasted units looked wrong yaw.
+                    Rotation = unit.transform.rotation,
+                    SourceSaved = unit.SavedUnit
+                });
             }
 
             if (GroupClipboard.Items.Count == 0)
@@ -162,14 +103,28 @@ namespace EditorPlus
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             Log.LogInfo($"[EditorPlus] Raycast from {ray.origin} dir {ray.direction}");
 
+            // Terrain uses Unity layer mask 64 (= 1<<6), NOT layer index 64. Do not use 1<<64 (wraps to layer 0 in C#).
+            const int TerrainOnlyLayerMask = 64;
             Vector3 hitPointLocal;
-            if (Physics.Raycast(ray, out RaycastHit hit, 100000f))
+            if (Physics.Raycast(ray, out RaycastHit terrainHit, 100000f, TerrainOnlyLayerMask))
+            {
+                hitPointLocal = terrainHit.point;
+                Log.LogInfo($"[EditorPlus] Paste ray hit terrain layer at {hitPointLocal}");
+            }
+            else if (Physics.Raycast(ray, out RaycastHit hit, 100000f))
             {
                 hitPointLocal = hit.point;
+                Log.LogInfo($"[EditorPlus] Paste ray hit non-terrain collider at {hitPointLocal} (no terrain under cursor)");
+                // Snap anchor Y to terrain under XZ so formation isn't anchored to a roof/wall depth
+                if (TrySnapLocalYToTerrain(hitPointLocal, TerrainOnlyLayerMask, out Vector3 snapped))
+                {
+                    hitPointLocal = snapped;
+                    Log.LogInfo($"[EditorPlus] Snapped paste anchor to terrain under cursor: {hitPointLocal}");
+                }
             }
             else
             {
-                // No terrain hit — try water plane for over-sea pasting
+                // No hit — try water plane for over-sea pasting
                 Plane waterPlane = new Plane(Vector3.up, new Vector3(0, Datum.LocalSeaY, 0));
                 if (waterPlane.Raycast(ray, out float enter))
                 {
@@ -211,33 +166,20 @@ namespace EditorPlus
                 }
             }
 
-            // Calculate paste center in global coordinates
-            // Use X and Z from hit point, but preserve original Y height
-            Vector3 pasteCenterGlobal = hitPointLocal + originOffset;
-            
-            // Preserve the original center Y height instead of using ground level
-            // This ensures units paste at their original height, not sunk into the ground
-            // OriginalCenterY is already in global coordinates, so use it directly
-            if (GroupClipboard.OriginalCenterY != 0f)
-            {
-                // Use X and Z from the hit point, but Y from the original center (already global)
-                pasteCenterGlobal.x = hitPointLocal.x + originOffset.x;
-                pasteCenterGlobal.z = hitPointLocal.z + originOffset.z;
-                pasteCenterGlobal.y = GroupClipboard.OriginalCenterY; // Already in global coordinates
-                Log.LogInfo($"[EditorPlus] Preserving original Y height: originalCenterY={GroupClipboard.OriginalCenterY}, pasteY={pasteCenterGlobal.y}");
-            }
-            
-            Log.LogInfo($"[EditorPlus] Paste: hitLocal={hitPointLocal} offset={originOffset} pasteCenter={pasteCenterGlobal}");
+            // Anchor is Unity world; we convert the anchor to GlobalPosition once, then add each unit's RelativeOffset
+            // in global space (see OffsetFromPasteAnchor). Per-unit (anchor+offset).ToGlobalPosition() is not translation-
+            // invariant with the game's floating origin and scatters large formations.
+            Log.LogInfo($"[EditorPlus] Paste: hitWorld={hitPointLocal} offset={originOffset} (formation from anchor global + deltas)");
             
             // Start async paste to avoid freezing with large groups
             if (Plugin.Instance != null)
             {
-                Plugin.Instance.StartCoroutine(SpawnGroupAsync(pasteCenterGlobal, originOffset));
+                Plugin.Instance.StartCoroutine(SpawnGroupAsync(hitPointLocal, originOffset));
             }
             else
             {
                 // Fallback to synchronous if no plugin instance
-                SpawnGroup(pasteCenterGlobal, originOffset);
+                SpawnGroup(hitPointLocal, originOffset);
             }
         }
 
@@ -266,14 +208,45 @@ namespace EditorPlus
             Vector3 globalPos = first.SourceSaved.globalPosition.AsVector3();
             Vector3 originOffset = globalPos - localPos;
 
-            Vector3 originalCenter = globalPos - first.RelativeOffset;
-            Vector3 offset = new Vector3(10f, 0f, 10f);
+            Vector3 dupNudge = new Vector3(10f, 0f, 10f);
+            // RelativeOffset = transform.position - centroid(world); centroid = first.pos - first.RelativeOffset
+            Vector3 centerWorld = localPos - first.RelativeOffset;
+            Vector3 dupAnchorWorld = centerWorld + dupNudge;
             
-            Log.LogInfo($"[EditorPlus] DuplicateInPlace: Spawning {GroupClipboard.Items.Count} unit(s) at offset {offset}");
-            SpawnGroup(originalCenter + offset, originOffset);
+            Log.LogInfo($"[EditorPlus] DuplicateInPlace: Spawning {GroupClipboard.Items.Count} unit(s) at offset {dupNudge}");
+            SpawnGroup(dupAnchorWorld, originOffset);
         }
 
-        private static void SpawnGroup(Vector3 pasteCenter, Vector3 originOffset)
+        /// <summary>
+        /// Convert paste anchor (Unity world hit) to <see cref="GlobalPosition"/> once per paste operation.
+        /// </summary>
+        private static GlobalPosition GetPasteAnchorGlobal(Vector3 pasteAnchorWorld, Vector3 originOffset)
+        {
+            try
+            {
+                return pasteAnchorWorld.ToGlobalPosition();
+            }
+            catch (Exception ex)
+            {
+                Log.LogWarning($"[EditorPlus] ToGlobalPosition(paste anchor) failed: {ex.Message}; using world+originOffset fallback");
+                return new GlobalPosition(pasteAnchorWorld + originOffset);
+            }
+        }
+
+        /// <summary>
+        /// <paramref name="relativeOffsetWorld"/> is world-space delta from copy centroid.
+        /// Adds it to <paramref name="anchorGlobal"/> (single anchor conversion). Do not call
+        /// <c>(anchorWorld + offset).ToGlobalPosition()</c> per unit — it breaks formation layout on large maps.
+        /// </summary>
+        private static GlobalPosition OffsetFromPasteAnchor(GlobalPosition anchorGlobal, Vector3 relativeOffsetWorld, bool shipLift)
+        {
+            Vector3 delta = relativeOffsetWorld;
+            if (shipLift)
+                delta.y += 35f;
+            return anchorGlobal + delta;
+        }
+
+        private static void SpawnGroup(Vector3 pasteAnchorWorld, Vector3 originOffset)
         {
             Log.LogInfo("[EditorPlus] SpawnGroup entered");
 
@@ -296,7 +269,15 @@ namespace EditorPlus
                 return;
             }
 
+            GlobalPosition pasteAnchorGlobal = GetPasteAnchorGlobal(pasteAnchorWorld, originOffset);
+
             var spawnedUnits = new List<Unit>();
+            bool deferFormationTerrain =
+                GroupClipboard.Items.Count > 1
+                && (Plugin.Instance == null || !Plugin.Instance.ignoreTerrain);
+            var formationClampEntries = deferFormationTerrain
+                ? new List<(Unit unit, SavedUnit savedUnit, UnitDefinition def)>()
+                : null;
 
             foreach (var data in GroupClipboard.Items)
             {
@@ -336,16 +317,9 @@ namespace EditorPlus
                     }
                     Log.LogInfo($"[EditorPlus] FactionHQ={factionHQ?.name ?? "null"}");
 
-                    Vector3 worldPos = pasteCenter + data.RelativeOffset;
-
-                    // Ships: raise 35m above so they drop onto water surface
+                    GlobalPosition gpos = OffsetFromPasteAnchor(pasteAnchorGlobal, data.RelativeOffset, definition is ShipDefinition);
                     if (definition is ShipDefinition)
-                    {
-                        worldPos.y += 35f;
                         Log.LogInfo("[EditorPlus] Ship detected, raised +35m for water drop");
-                    }
-
-                    GlobalPosition gpos = new GlobalPosition(worldPos);
 
                     // Generate a unique name with counter and random component to ensure uniqueness
                     string uniqueName = definition.unitPrefab.name + "_EP" + (++_spawnCounter) + "_" + UnityEngine.Random.Range(1000, 9999);
@@ -385,15 +359,9 @@ namespace EditorPlus
                         savedUnit.globalPosition = gpos;
                         savedUnit.rotation = data.Rotation;
                         
-                        // If no clip, also update the unit transform immediately
-                        if (Plugin.Instance != null && Plugin.Instance.ignoreTerrain)
-                        {
-                            Vector3 localPos = (gpos.AsVector3() - originOffset);
-                            unit.transform.position = localPos;
-                            unit.transform.rotation = data.Rotation;
-                            Physics.SyncTransforms();
-                            Log.LogInfo($"[EditorPlus] No clip: Position re-applied after CopyPaste - local={localPos}, global={gpos.AsVector3()}");
-                        }
+                        // Always move the scene object to the pasted pose before terrain clamp (not only no-clip).
+                        ApplyTransformFromGlobalPose(unit, gpos, data.Rotation, originOffset);
+                        Log.LogInfo($"[EditorPlus] Pose after CopyPaste: global={gpos.AsVector3()} local={unit.transform.position}");
 
                         // Apply aircraft livery visually (CopyPaste only sets SavedAircraft data)
                         if (unit is Aircraft aircraft
@@ -411,7 +379,7 @@ namespace EditorPlus
                             Patches.HoldPositionHelper.ApplyToSavedUnit(savedUnit, true);
                         }
 
-                        Log.LogInfo($"[EditorPlus] Properties copied, pos re-set to {worldPos}");
+                        Log.LogInfo($"[EditorPlus] Properties copied, pos re-set to {gpos.AsVector3()}");
                     }
 
                     // Clamp position to terrain — same as game's ClampPosition
@@ -419,7 +387,10 @@ namespace EditorPlus
                     // Only clamp if ignoreTerrain is false
                     if (Plugin.Instance == null || !Plugin.Instance.ignoreTerrain)
                     {
-                        ClampUnitToTerrain(unit, savedUnit, definition, originOffset);
+                        if (formationClampEntries != null && unit != null && savedUnit != null)
+                            formationClampEntries.Add((unit, savedUnit, definition));
+                        else
+                            ClampUnitToTerrain(unit, savedUnit, definition, originOffset);
                     }
                     else
                     {
@@ -444,6 +415,17 @@ namespace EditorPlus
                 catch (Exception ex)
                 {
                     Log.LogError($"[EditorPlus] Error spawning {data.Type}: {ex}");
+                }
+            }
+
+            if (formationClampEntries != null && formationClampEntries.Count > 0)
+            {
+                if (formationClampEntries.Count > 1)
+                    ApplyFormationTerrainClamp(formationClampEntries, originOffset);
+                else
+                {
+                    var e = formationClampEntries[0];
+                    ClampUnitToTerrain(e.unit, e.savedUnit, e.def, originOffset);
                 }
             }
 
@@ -475,9 +457,7 @@ namespace EditorPlus
                     }
                 }
 
-                // Clear clipboard after successful paste to prevent accidental multiple pastes
-                GroupClipboard.Clear();
-                Log.LogInfo("[EditorPlus] Clipboard cleared after paste");
+                // Clipboard is kept so Ctrl+V can paste again (standard behavior; debounce + _isPasting limit spam)
             }
 
             Log.LogInfo($"[EditorPlus] Pasted {spawnedUnits.Count} units");
@@ -486,7 +466,7 @@ namespace EditorPlus
         /// <summary>
         /// Async version of SpawnGroup that spreads spawning across multiple frames to maintain FPS
         /// </summary>
-        private static IEnumerator SpawnGroupAsync(Vector3 pasteCenter, Vector3 originOffset)
+        private static IEnumerator SpawnGroupAsync(Vector3 pasteAnchorWorld, Vector3 originOffset)
         {
             // Set paste flag to prevent multiple simultaneous pastes
             CopyPasteInputHandler.SetPasting(true);
@@ -511,8 +491,16 @@ namespace EditorPlus
                     yield break;
                 }
 
+                GlobalPosition pasteAnchorGlobal = GetPasteAnchorGlobal(pasteAnchorWorld, originOffset);
+
                 var spawnedUnits = new List<Unit>();
                 var itemsToSpawn = new List<CopiedUnitData>(GroupClipboard.Items); // Copy list to avoid modification during iteration
+                bool deferFormationTerrain =
+                    itemsToSpawn.Count > 1
+                    && (Plugin.Instance == null || !Plugin.Instance.ignoreTerrain);
+                var formationClampEntries = deferFormationTerrain
+                    ? new List<(Unit unit, SavedUnit savedUnit, UnitDefinition def)>()
+                    : null;
                 const int UNITS_PER_FRAME = 15; // Spawn 15 units per frame to maintain FPS
                 int spawnedCount = 0;
 
@@ -549,14 +537,7 @@ namespace EditorPlus
                             catch { }
                         }
 
-                        Vector3 worldPos = pasteCenter + data.RelativeOffset;
-
-                        if (definition is ShipDefinition)
-                        {
-                            worldPos.y += 35f;
-                        }
-
-                        GlobalPosition gpos = new GlobalPosition(worldPos);
+                        GlobalPosition gpos = OffsetFromPasteAnchor(pasteAnchorGlobal, data.RelativeOffset, definition is ShipDefinition);
                         // Generate a unique name with counter and random component to ensure uniqueness
                         string uniqueName = definition.unitPrefab.name + "_EP" + (++_spawnCounter) + "_" + UnityEngine.Random.Range(1000, 9999);
 
@@ -589,13 +570,7 @@ namespace EditorPlus
                             savedUnit.globalPosition = gpos;
                             savedUnit.rotation = data.Rotation;
                             
-                            if (Plugin.Instance != null && Plugin.Instance.ignoreTerrain)
-                            {
-                                Vector3 localPos = (gpos.AsVector3() - originOffset);
-                                unit.transform.position = localPos;
-                                unit.transform.rotation = data.Rotation;
-                                Physics.SyncTransforms();
-                            }
+                            ApplyTransformFromGlobalPose(unit, gpos, data.Rotation, originOffset);
 
                             if (unit is Aircraft aircraft
                                 && data.SourceSaved is SavedAircraft srcAc
@@ -613,7 +588,10 @@ namespace EditorPlus
 
                         if (Plugin.Instance == null || !Plugin.Instance.ignoreTerrain)
                         {
-                            ClampUnitToTerrain(unit, savedUnit, definition, originOffset);
+                            if (formationClampEntries != null && unit != null && savedUnit != null)
+                                formationClampEntries.Add((unit, savedUnit, definition));
+                            else
+                                ClampUnitToTerrain(unit, savedUnit, definition, originOffset);
                         }
                         else
                         {
@@ -639,6 +617,17 @@ namespace EditorPlus
                     if (spawnedCount % UNITS_PER_FRAME == 0)
                     {
                         yield return null; // Wait one frame
+                    }
+                }
+
+                if (formationClampEntries != null && formationClampEntries.Count > 0)
+                {
+                    if (formationClampEntries.Count > 1)
+                        ApplyFormationTerrainClamp(formationClampEntries, originOffset);
+                    else
+                    {
+                        var e = formationClampEntries[0];
+                        ClampUnitToTerrain(e.unit, e.savedUnit, e.def, originOffset);
                     }
                 }
 
@@ -669,9 +658,7 @@ namespace EditorPlus
                         }
                     }
 
-                    // Clear clipboard after successful paste
-                    GroupClipboard.Clear();
-                    Log.LogInfo("[EditorPlus] Clipboard cleared after async paste");
+                    // Clipboard kept for repeat paste (see synchronous SpawnGroup)
                 }
 
                 Log.LogInfo($"[EditorPlus] Async paste completed: {spawnedUnits.Count} units");
@@ -688,19 +675,140 @@ namespace EditorPlus
         /// Raycast with layer 64 (terrain only, ignores structures/units),
         /// then clamp Y using definition.spawnOffset, minEditorHeight, maxEditorHeight.
         /// </summary>
-        private static void ClampUnitToTerrain(Unit unit, SavedUnit savedUnit,
-            UnitDefinition definition, Vector3 originOffset)
+        /// <summary>
+        /// Sync Unity transform from intended global pose. CopyPaste copies source unit state and can leave
+        /// the transform at the old location while savedUnit.globalPosition is correct — ClampUnitToTerrain
+        /// must run on the pasted pose or the group scatters / keeps source positions.
+        /// </summary>
+        private static void ApplyTransformFromGlobalPose(Unit unit, GlobalPosition gpos, Quaternion rotation, Vector3 originOffset)
         {
-            if (unit == null || savedUnit == null || definition == null) return;
+            if (unit == null) return;
+            // Match vanilla / GroupFollowers: GlobalPosition -> Unity world is ToLocalPosition(), not AsVector3()-offset
+            Vector3 localPos;
+            try
+            {
+                localPos = gpos.ToLocalPosition();
+            }
+            catch
+            {
+                localPos = gpos.AsVector3() - originOffset;
+            }
+            unit.transform.position = localPos;
+            unit.transform.rotation = rotation;
+            Physics.SyncTransforms();
+        }
 
-            Vector3 localPos = unit.transform.position;
+        /// <summary>
+        /// Raycast straight down from above a point to terrain only; used when the mouse ray hit a building/unit.
+        /// </summary>
+        private static bool TrySnapLocalYToTerrain(Vector3 worldPoint, int terrainLayerMask, out Vector3 snapped)
+        {
+            snapped = worldPoint;
+            float startY = Mathf.Max(worldPoint.y, Datum.LocalSeaY) + 10000f;
+            var origin = new Vector3(worldPoint.x, startY, worldPoint.z);
+            if (Physics.Raycast(origin, Vector3.down, out RaycastHit tHit, 25000f, terrainLayerMask)
+                && tHit.collider != null
+                && tHit.collider.GetComponentInParent<Unit>() == null)
+            {
+                snapped = new Vector3(worldPoint.x, tHit.point.y, worldPoint.z);
+                return true;
+            }
+            return false;
+        }
 
-            // FindHighestTerrainPoint: raycast down with layer 64, exclude Unit colliders
-            const int terrainLayer = 64;
+        /// <summary>
+        /// Multi-unit paste: per-unit terrain clamp uses a different ground reference under each footprint,
+        /// which warps relative Y on slopes. Apply one vertical shift to the whole group so every unit stays
+        /// inside its editor height band while preserving relative heights (same delta Y between units).
+        /// </summary>
+        private static void ApplyFormationTerrainClamp(
+            List<(Unit unit, SavedUnit savedUnit, UnitDefinition def)> entries,
+            Vector3 originOffset)
+        {
+            if (entries == null || entries.Count < 2) return;
+
+            var yIntended = new List<float>(entries.Count);
+            var lo = new List<float>(entries.Count);
+            var hi = new List<float>(entries.Count);
+
+            foreach (var (unit, savedUnit, def) in entries)
+            {
+                if (unit == null || savedUnit == null || def == null)
+                {
+                    foreach (var e in entries)
+                        ClampUnitToTerrain(e.unit, e.savedUnit, e.def, originOffset);
+                    return;
+                }
+
+                Vector3 p = unit.transform.position;
+                if (!TryGetHighestTerrainY(p, out float rawTerrainY))
+                {
+                    foreach (var e in entries)
+                        ClampUnitToTerrain(e.unit, e.savedUnit, e.def, originOffset);
+                    return;
+                }
+
+                float terrainY = rawTerrainY + def.spawnOffset.y;
+                yIntended.Add(p.y);
+                lo.Add(terrainY + def.minEditorHeight);
+                hi.Add(terrainY + def.maxEditorHeight);
+            }
+
+            float sMin = lo[0] - yIntended[0];
+            float sMax = hi[0] - yIntended[0];
+            for (int i = 1; i < entries.Count; i++)
+            {
+                sMin = Mathf.Max(sMin, lo[i] - yIntended[i]);
+                sMax = Mathf.Min(sMax, hi[i] - yIntended[i]);
+            }
+
+            if (sMin > sMax)
+            {
+                Log.LogInfo("[EditorPlus] Formation terrain: no single vertical shift fits all units; using per-unit clamp");
+                foreach (var e in entries)
+                    ClampUnitToTerrain(e.unit, e.savedUnit, e.def, originOffset);
+                return;
+            }
+
+            float s = Mathf.Clamp(0f, sMin, sMax);
+            bool moved = false;
+            for (int i = 0; i < entries.Count; i++)
+            {
+                var (unit, savedUnit, _) = entries[i];
+                float newY = yIntended[i] + s;
+                Vector3 lp = unit.transform.position;
+                if (Mathf.Abs(newY - lp.y) <= 0.01f)
+                    continue;
+
+                unit.transform.position = new Vector3(lp.x, newY, lp.z);
+                moved = true;
+
+                try
+                {
+                    savedUnit.globalPosition = unit.transform.position.ToGlobalPosition();
+                }
+                catch
+                {
+                    Vector3 gv = savedUnit.globalPosition.AsVector3();
+                    gv.y = newY + originOffset.y;
+                    savedUnit.globalPosition = new GlobalPosition(gv);
+                }
+            }
+
+            if (moved)
+                Physics.SyncTransforms();
+
+            Log.LogInfo($"[EditorPlus] Formation terrain clamp: uniform shift {s:F2}m for {entries.Count} units (relative heights preserved)");
+        }
+
+        /// <summary>Layer 64 terrain raycast; highest hit excluding Unit colliders.</summary>
+        private static bool TryGetHighestTerrainY(Vector3 localPos, out float highestY)
+        {
+            highestY = float.MinValue;
+            const int TerrainOnlyLayerMask = 64;
             RaycastHit[] hits = Physics.RaycastAll(
-                localPos + Vector3.up * 10000f, Vector3.down, 20000f, terrainLayer);
+                localPos + Vector3.up * 10000f, Vector3.down, 20000f, TerrainOnlyLayerMask);
 
-            float highestY = float.MinValue;
             for (int i = 0; i < hits.Length; i++)
             {
                 if (hits[i].collider.GetComponentInParent<Unit>() == null
@@ -710,7 +818,18 @@ namespace EditorPlus
                 }
             }
 
-            if (highestY <= float.MinValue) return;
+            return highestY > float.MinValue;
+        }
+
+        private static void ClampUnitToTerrain(Unit unit, SavedUnit savedUnit,
+            UnitDefinition definition, Vector3 originOffset)
+        {
+            if (unit == null || savedUnit == null || definition == null) return;
+
+            Vector3 localPos = unit.transform.position;
+
+            if (!TryGetHighestTerrainY(localPos, out float highestY))
+                return;
 
             // ClampPosition formula
             float terrainY = highestY + definition.spawnOffset.y;
@@ -723,10 +842,16 @@ namespace EditorPlus
                 unit.transform.position = new Vector3(localPos.x, clampedY, localPos.z);
                 Physics.SyncTransforms();
 
-                // Update saved global position
-                Vector3 globalVec = savedUnit.globalPosition.AsVector3();
-                globalVec.y = clampedY + originOffset.y;
-                savedUnit.globalPosition = new GlobalPosition(globalVec);
+                try
+                {
+                    savedUnit.globalPosition = unit.transform.position.ToGlobalPosition();
+                }
+                catch
+                {
+                    Vector3 globalVec = savedUnit.globalPosition.AsVector3();
+                    globalVec.y = clampedY + originOffset.y;
+                    savedUnit.globalPosition = new GlobalPosition(globalVec);
+                }
 
                 Log.LogInfo($"[EditorPlus] Terrain clamped localY: {localPos.y:F1} -> {clampedY:F1}");
             }
@@ -755,9 +880,16 @@ namespace EditorPlus
         {
             if (unit == null || savedUnit == null) return;
 
-            // Convert global position to local for transform
             Vector3 globalVec = gpos.AsVector3();
-            Vector3 localPos = globalVec - originOffset;
+            Vector3 localPos;
+            try
+            {
+                localPos = gpos.ToLocalPosition();
+            }
+            catch
+            {
+                localPos = globalVec - originOffset;
+            }
             
             // Set position via wrapper if available (more reliable)
             try

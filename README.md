@@ -1,322 +1,91 @@
-# EditorPlus - Updated as of 2026/03/10
+# EditorPlus
 
-## Original Creator
-**nikkorap** - Created the original EditorPlus mod
+A bepinex mod to enhance the Nuclear Option mission editor experience.
 
-## Updated By
-**Endar728** - Enhanced EditorPlus with copy-paste functionality, bug fixes, and additional features
+### New UI
+* Nodegraph-based objective/outcome UI, click and drag on ports to change connections, hover over a connection or port and press delete to remove connections.
+* Ghost lines from nodes to units, airbases, and waypoints.
+* Add selected units to a node: open Node UI, hover the node, Shift + LMB.
 
----
+### Group unit selection
+* Group selection: `Shift` + `LMB` drag to box select; click any selected unit to set the pivot.
+* Remove and Faction settings apply to all selected units.
 
-## Version History
+### Unit placement
+* Rapid placement of units while holding `Ctrl`.
+* Toggle to enable hold position when placing new units.
+* Grid snapping (WIP).
+* Toggle terrain collision.
+* hold `Ctrl` to switch between position and rotation.
+* Removed height limits.
 
-### Version 1.5.0 (Current) - Updated by Endar728
-- **Release Date**: 2026-03-10
-- **Major Features Added**: 
-  - **Copy-paste functionality** (NEW - did not exist in v1.4.2)
-  - Enhanced hold position system (improvements to existing feature)
-  - Enhanced no clip mode (improvements to existing feature)
-  - Free camera collision disabled (NEW)
-- **Critical Bug Fix**: Fixed copy-paste/duplicate name collision bug
-- **What's New**: This version adds complete copy-paste functionality (Ctrl+C/V/D) which was completely absent from v1.4.2
+### Copy-Paste Functionality ⚠️ NEW IN v1.5.0
+**This feature was added by Endar728 in v1.5.0 and did NOT exist in the original v1.4.2 by nikkorap.**
 
-### Version 1.4.2 - Original by nikkorap
-- Base EditorPlus functionality
-- Node graph UI
-- Group selection
-- Hold position toggle
-- Terrain collision toggle
-- **Note**: Copy-paste functionality was NOT included in v1.4.2
+* **Mass Copy (Ctrl+C)**: Copy all selected units with their relative positions, rotations, and properties
+* **Mass Paste (Ctrl+V)**: Paste copied units at cursor (raycast hit); formation shape kept via relative offsets
+* **Duplicate in Place (Ctrl+D)**: Duplicate selected units at their current location with a small offset
+* **Paste height**: Anchor uses the surface under the cursor (full global position from hit), not the copied group’s global Y (avoids wrong placement when center Y is map datum / 0)
+* **Multi-Unit Support**: Copy and paste entire groups of units while maintaining their spatial relationships
+* **Smart Input Detection**: Unit copy-paste is automatically disabled when typing in text input fields, preventing conflicts with text copy-paste operations
+* **Unique Name Generation**: Each pasted/duplicated unit receives a unique name to prevent mission corruption (Fixed in v1.5.0)
 
----
+### Mass Delete ⚠️ NEW IN v1.5.0
+**This feature was added by Endar728 in v1.5.0 and did NOT exist in the original v1.4.2 by nikkorap.**
 
-## Complete Feature List
+* **Delete Key**: Press Delete to remove all selected units at once
+* Works seamlessly with group selection system
 
-### Original Features (by nikkorap)
-
-#### Node Graph UI
-- Visual node graph interface for managing mission objectives and outcomes
-- Click and drag on ports to change connections
-- Hover over a connection or port and press Delete to remove connections
-- Ghost lines from nodes to units, airbases, and waypoints
-- Add selected units to a node: open Node UI, hover the node, Shift + LMB
-
-#### Group Unit Selection
-- Box selection: `Shift` + `LMB` drag to box select multiple units
-- Pivot selection: Click any selected unit to set the pivot point
-- Mass operations: Remove and Faction settings apply to all selected units simultaneously
-- Group movement: Selected units move together maintaining relative positions and rotations
-
-#### Unit Placement
-- Rapid placement: Hold `Ctrl` while placing units for rapid placement
-- Hold position toggle: Enable/disable hold position when placing new units (toggle in toolbar)
-- Grid snapping: Work in progress (WIP)
-- Terrain collision toggle: Toggle to ignore terrain collision (labeled "noclip" in toolbar)
-- Position/Rotation switch: Hold `Ctrl` to switch between position and rotation modes
-- Height limits removed: Units can be placed at any height
-
-#### Other Features
-- Extended dropdowns: All dropdown menus have extended options
-- Mission objectives cache: Automatic cache management for mission objectives
-- Scene lifecycle management: Proper cleanup on scene unload
+### other
+* Extended all dropdowns.
+* Automatic conflict resolution with UnitCopyPaste mod (disables conflicting handler) ⚠️ NEW IN v1.5.0
 
 ---
 
-## New Features Added by Endar728 (v1.4.2 → v1.5.0)
+## Version Information
 
-> **Important**: All features listed below were NOT present in v1.4.2. They are completely new additions by Endar728 in v1.5.0.
-
-### Copy-Paste Functionality
-**⚠️ NEW IN v1.5.0 - This feature did NOT exist in v1.4.2**
-
-**Completely new feature system integrated into EditorPlus by Endar728**
-
-Copy-paste functionality is a brand new feature that was added in v1.5.0. The original v1.4.2 by nikkorap did not include any copy-paste capabilities. This entire system was designed and implemented by Endar728.
-
-#### Keyboard Shortcuts
-- **Ctrl+C**: Copy selected units to clipboard
-  - Works with single selection, multi-selection, and EditorPlus mass selection
-  - Stores unit type, faction, position, rotation, and all properties
-  
-- **Ctrl+V**: Paste units at cursor position
-  - Raycasts from camera to find paste location
-  - Pastes units maintaining their relative positions
-  - Automatically selects pasted units for immediate manipulation
-  - Preserves original height (units don't sink into ground)
-  
-- **Ctrl+D**: Duplicate selected units in place
-  - Copies selection and pastes nearby (10m offset)
-  - Useful for quick duplication
-
-#### Copy-Paste Features
-- **Mass selection support**: Works seamlessly with EditorPlus GroupFollowers mass selection
-- **Height preservation**: Units paste at their original height, not at ground level
-- **Property preservation**: All unit properties are copied including:
-  - Unit type and definition
-  - Faction assignment
-  - Rotation/orientation
-  - Aircraft livery (for aircraft)
-  - All saved unit data
-  
-- **Automatic selection**: Pasted units are automatically added to GroupFollowers for mass movement
-- **Clipboard management**: Clipboard clears after paste to prevent accidental multiple pastes
-- **Terrain handling**: 
-  - Ships are raised 35m above paste point to drop onto water surface
-  - Terrain clamping respects "noclip" toggle
-  - Falls back to water plane if no terrain is found
-- **Async paste**: Large groups are pasted asynchronously across multiple frames to maintain FPS
-- **Smart input detection**: Unit copy-paste is automatically disabled when typing in text input fields
-- **Alternative hotkeys**: Ctrl+Shift+C/V/D as alternative hotkeys that always work
-- **Unique name generation**: Each pasted/duplicated unit receives a unique name to prevent mission corruption
-
-### Enhanced Hold Position System
-**⚠️ ENHANCED IN v1.5.0 - Significant improvements to existing hold position feature**
-
-**Note**: Hold position toggle existed in v1.4.2, but the continuous monitoring, copy-paste integration, and enhanced enforcement are new additions by Endar728.
-
-- **Continuous monitoring**: Background monitor ensures hold position is maintained even if other code tries to reset it
-- **Multiple protection layers**: 
-  - Immediate application during unit registration
-  - Re-application via coroutines over multiple frames
-  - Setter/getter patches that prevent resetting
-  - Continuous background monitoring
-- **Copy-paste integration**: Hold position is preserved during copy-paste operations
-- **Place More support**: Hold position works for units placed via "Place More" (Ctrl+click)
-- **Aggressive enforcement**: Multiple layers of protection prevent hold position from being cleared
-
-### No Clip Functionality
-**⚠️ ENHANCED IN v1.5.0 - Enhanced terrain ignore mode**
-
-**Note**: Basic terrain collision toggle existed in v1.4.2, but the enhanced no clip system with position preservation, copy-paste support, and clamp prevention are new additions by Endar728.
-
-- **Terrain ignore mode**: Units can be placed and moved without terrain clamping
-- **Position preservation**: No clip positions are maintained through unit registration and copy-paste operations
-- **Multi-frame application**: Positions are re-applied over multiple frames to ensure they stick
-- **Clamp prevention**: Patches prevent the game's clamping methods from affecting units when no clip is active
-- **Copy-paste support**: No clip positions are preserved when copying and pasting units
-
-### Free Camera Enhancement
-**⚠️ NEW IN v1.5.0 - New feature for better camera control**
-
-This feature did not exist in v1.4.2. It was added by Endar728 in v1.5.0.
-
-- **Collision disabled**: Free camera movement without collision constraints
-- **Automatic detection**: Automatically finds and disables camera collision
-- **Scene-aware**: Re-initializes when GameWorld scene loads
-
----
-
-## Technical Improvements by Endar728
-
-### Code Architecture
-- **Modular design**: Separated concerns into dedicated classes
-  - `GroupCopyPaste.cs` - Core copy-paste logic
-  - `GroupClipboard.cs` - Clipboard data storage
-  - `CopyPasteInputHandler.cs` - Input handling
-  - `NoClipPositionStore.cs` - No clip position storage
-  - `HoldPositionMonitor.cs` - Hold position monitoring
-- **Error handling**: Enhanced error handling throughout with try-catch blocks
-- **Logging**: Comprehensive logging for debugging and troubleshooting
-- **Reflection utils**: Enhanced reflection utilities for compatibility with different game versions
-
-### Harmony Patches Added
-- **RegisterNewUnit Patch**: Applies hold position and no clip positions immediately when units are registered
-- **PlaceUnit Patch**: Monitors and applies hold position to "Place More" units
-- **StartPlaceUnit Patch**: Additional monitoring for units placed through the placement system
-- **UnitCopyPaste Patch**: Preserves hold position during copy-paste operations
-- **HoldPositionMonitor Patches**: Prevent hold position from being reset on SavedVehicle and SavedShip
-- **ClampPosition Patches**: Prevent terrain clamping when no clip is enabled
-- **FreeCameraCollision Patch**: Disables camera collision
-
-### Input Handling
-- **Early initialization**: Input handler is created early in plugin lifecycle to ensure priority over other mods
-- **Input consumption**: Input is consumed after handling to prevent conflicts with other mods
-- **Input field detection**: Copy-paste shortcuts are disabled when typing in UI input fields
-- **Debouncing**: Prevents rapid-fire operations with debounce timers
-
-### Compatibility
-- **UnitCopyPaste Mod**: Automatically disables conflicting handler to prevent conflicts
-- **Reflection-based**: Uses reflection for MissionObjectives access for better compatibility
-- **BepInEx 5.x**: Requires BepInEx 5.x or later
-
----
-
-## Bug Fixes by Endar728
-
-### Critical Bug Fixes
-1. **Copy-Paste/Duplicate Name Collision Bug (v1.5.0)**
-   - **Problem**: All pasted/duplicated units received the same name, causing mission corruption
-   - **Solution**: Added unique name preservation system that restores names after property copying
-   - **Impact**: Prevents mission files from becoming corrupted
-
-### Copy-Paste Bug Fixes
-2. **Units pasting far from cursor position**
-   - Solution: Calculate origin offset using camera's global position instead of source unit
-
-3. **Units pasting into the ground**
-   - Solution: Preserve original Y-coordinate height from copied group center
-
-4. **Clipboard not clearing after paste**
-   - Solution: Clear clipboard immediately after successful paste operation
-
-5. **Unit copy-paste interfering with text copy-paste in input fields**
-   - Solution: Enhanced input field detection with multiple methods (raycast, focus detection, parent traversal)
-
-### Hold Position Bug Fixes
-6. **Hold position not working for "Place More" units**
-   - Solution: Multiple layers of monitoring and application (immediate, coroutine, continuous)
-
-7. **Hold position being reset after application**
-   - Solution: Direct field access via reflection, multiple re-application attempts over multiple frames
-
-### No Clip Bug Fixes
-8. **No clip not working for pasted units**
-   - Solution: Store desired position before RegisterNewUnit, then re-apply via coroutine
-
-9. **Units being clamped to terrain despite no clip being enabled**
-   - Solution: Patch ClampPosition and ClampY methods to respect no clip setting
-
----
-
-## Files Added by Endar728
-
-### New Source Files (10 files)
-1. `GroupCopyPaste.cs` - Core copy-paste logic with support for mass operations
-2. `GroupClipboard.cs` - Centralized clipboard system for storing copied unit data
-3. `CopyPasteInputHandler.cs` - Handles keyboard input for copy-paste operations
-4. `NoClipPositionStore.cs` - Temporary storage for desired positions during no clip operations
-5. `Patches/HoldPositionMonitor.cs` - Monitors and prevents hold position from being reset
-6. `Core/HoldPositionMonitor.cs` - Continuous background monitor for hold position
-7. `Patches/ClampPositionPatch.cs` - Prevents terrain clamping when no clip is enabled
-8. `Patches/FreeCameraCollision.cs` - Disables collision for free camera movement
-9. `Patches/UnitCopyPastePatch.cs` - Preserves hold position during copy-paste operations
-10. `Patches/StartPlaceUnit.cs` - Additional monitoring for units placed through the placement system
-
-### Files Modified by Endar728 (7 files)
-1. `Plugin.cs` - Added initialization for new systems, enhanced error handling
-2. `Core/SceneSetup.cs` - Enhanced with copy-paste support, patch initialization
-3. `Core/ReflectionUtils.cs` - Added `GetMissionObjectives()` method for compatibility
-4. `Core/Overlay.cs` - Enhanced hold position integration
-5. `Patches/RegisterNewUnit.cs` - Enhanced hold position and no clip support
-6. `Patches/PlaceUnit.cs` - Added hold position monitoring
-7. `Patches/ClampY.cs` - Enhanced no clip support
-
----
-
-## Statistics
-
-### Code Changes
-- **New Files**: 10
-- **Modified Files**: 7
-- **Lines of Code Added**: ~2000+ (estimated)
-- **New Features**: 4 major feature systems
-- **Bug Fixes**: 9 bugs fixed
-- **Harmony Patches Added**: 7 new patches
-
-### Feature Breakdown
-- **Copy-Paste System**: ⚠️ **BRAND NEW** - Complete new feature system with 3 keyboard shortcuts (Ctrl+C/V/D). This did NOT exist in v1.4.2.
-- **Hold Position Enhancement**: Significant improvements to existing feature from v1.4.2
-- **No Clip System**: Enhanced terrain ignore functionality (basic toggle existed in v1.4.2, enhancements are new)
-- **Free Camera**: ⚠️ **NEW** - Camera collision disabling feature (did not exist in v1.4.2)
-
----
-
-## Installation
-
-1. Place `com.nikkorap.EditorPlus.dll` in `BepInEx/plugins/`
-2. Ensure `editorplus_ui.noep` is in the same folder as the DLL
-3. Requires BepInEx 5.x or later
-4. Compatible with latest version of Nuclear Option
-
----
-
-## Usage
-
-### Copy-Paste
-- **Copy**: Select units, then press `Ctrl+C`
-- **Paste**: Press `Ctrl+V` at desired location (cursor position)
-- **Duplicate**: Select units, then press `Ctrl+D`
-
-### Mass Operations
-- Use **Shift+LMB** drag for box selection
-- All selected units can be moved together
-- Faction changes apply to all selected units
-- Copy-paste works with mass selections
-
-### Hold Position
-- Toggle "Hold Pos" in toolbar before placing new units
-- Applies to newly placed units automatically
-- Also applies when pasting if toggle is enabled
-
-### No Clip
-- Toggle "noclip" in toolbar
-- Units can be placed and moved without terrain constraints when enabled
-- Works with copy-paste operations
-
----
-
-## Acknowledgments
-
-- **nikkorap**: Original creator of EditorPlus - thank you for the excellent base mod
-
-
-## License
-
-This mod builds upon the original EditorPlus by nikkorap. All new features and improvements added by Endar728 are provided as enhancements to the original work.
-
----
-
-## Support
-
-For issues, bug reports, or feature requests related to the updates by Endar728, please provide:
-- BepInEx log file
-- Steps to reproduce
-- Description of the problem
-- Version information (should be 1.5.0)
-
----
-
-**Last Updated**: 2026-03-07  
-**Current Version**: 1.5.0  
+**Current Version**: 1.5.1  
 **Updated by**: Endar728  
-**Original Creator**: nikkorap
+**Original Creator**: nikkorap (v1.4.2)
+
+### What's New in v1.5.0 (Updated by Endar728)
+- ⚠️ **Copy-Paste Functionality** - Complete new feature system (Ctrl+C/V/D) - **DID NOT EXIST in v1.4.2**
+- ⚠️ **Mass Delete** - Delete key support - **DID NOT EXIST in v1.4.2**
+- Enhanced hold position system (improvements to existing feature)
+- Enhanced no clip mode (improvements to existing feature)
+- Free camera collision disabled (new feature)
+- Critical bug fix: Copy-paste name collision bug
+
+### Original Features (v1.4.2 by nikkorap)
+- Node graph UI
+- Group unit selection
+- Unit placement features
+- Hold position toggle (basic)
+- Terrain collision toggle (basic)
+- Extended dropdowns
+
+If you encounter any bugs then please report them. Feedback is appreciated!
+<img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/6489d11f-7bdb-4868-85cf-6edbeec75d87" />
+
+
+## How to install BepInEx (5 mono) guide [https://docs.bepinex.dev/articles/user_guide/installation/index.html]
+
+TLDR:
+1. Download the correct version of BepInEx (bepinex 5 mono) [https://github.com/BepInEx/BepInEx]
+2. Extract the contents into the game root (where [NuclearOption.exe] lives)
+3. Start the game once to generate configuration files.
+4. Open [Nuclear Option\BepInEx\config\BepInEx.cfg] and make sure that the setting 
+   [Chainloader]
+   HideGameManagerObject = true.
+
+5. (optional) also edit 
+   [Logging.Console]
+   Enabled = true.
+
+(you can also change bepinex settings ingame using the Mod Configuration manager)
+
+
+## How to install mods for BepInEx?
+
+- in the downloaded zip file there is a folder, place it in [Nuclear Option\BepInEx\plugins\ (optional folder)]
+- the mod .dll and .nobp file must be together in the same folder, they can be placed under any subfolder of plugins

@@ -11,10 +11,8 @@ namespace EditorPlus
     internal class CopyPasteInputHandler : MonoBehaviour
     {
         private static CopyPasteInputHandler _instance;
-        private float _lastCopyTime = -1f;
-        private float _lastPasteTime = -1f;
         private float _lastDuplicateTime = -1f;
-        private const float DEBOUNCE_TIME = 0.1f; // 100ms debounce to prevent multiple triggers (reduced from 200ms)
+        private const float DUPLICATE_DEBOUNCE_TIME = 0.08f; // Paste uses _isPasting only; copy has no debounce so a new selection always replaces clipboard
         private static bool _isPasting = false; // Track if paste is in progress
 
         public static void EnsureExists()
@@ -100,12 +98,6 @@ namespace EditorPlus
             // Add debouncing to prevent multiple rapid triggers
             if (Input.GetKeyDown(KeyCode.C))
             {
-                if (currentTime - _lastCopyTime < DEBOUNCE_TIME)
-                {
-                    Plugin.Logger?.LogWarning("[EditorPlus] Copy debounced - too soon after last copy");
-                    return;
-                }
-                _lastCopyTime = currentTime;
                 Plugin.Logger?.LogInfo("[EditorPlus] Ctrl+C pressed - Copying selection");
                 GroupCopyPaste.CopySelectedGroup();
                 // Reset input to prevent other mods from handling it
@@ -115,18 +107,13 @@ namespace EditorPlus
             
             if (Input.GetKeyDown(KeyCode.V))
             {
-                // Don't allow paste if one is already in progress
+                // Don't allow paste if one is already in progress (async spawn)
                 if (_isPasting)
                 {
                     Plugin.Logger?.LogWarning("[EditorPlus] Paste already in progress, ignoring");
                     return;
                 }
-                if (currentTime - _lastPasteTime < DEBOUNCE_TIME)
-                {
-                    Plugin.Logger?.LogWarning("[EditorPlus] Paste debounced - too soon after last paste");
-                    return;
-                }
-                _lastPasteTime = currentTime;
+                // No time debounce on paste — repeat Ctrl+V should work; _isPasting prevents overlap
                 Plugin.Logger?.LogInfo("[EditorPlus] Ctrl+V pressed - Pasting at cursor");
                 GroupCopyPaste.PasteGroupAtCursor();
                 Input.ResetInputAxes();
@@ -135,7 +122,7 @@ namespace EditorPlus
             
             if (Input.GetKeyDown(KeyCode.D))
             {
-                if (currentTime - _lastDuplicateTime < DEBOUNCE_TIME)
+                if (currentTime - _lastDuplicateTime < DUPLICATE_DEBOUNCE_TIME)
                 {
                     Plugin.Logger?.LogWarning("[EditorPlus] Duplicate debounced - too soon after last duplicate");
                     return;
@@ -153,37 +140,10 @@ namespace EditorPlus
             var editor = SceneSingleton<MissionEditor>.i;
             if (editor == null) return;
 
-            // Try to get selection from GroupFollowers first (mass selection)
+            var selection = SceneSingleton<UnitSelection>.i;
             var groupFollowers = UnityEngine.Object.FindObjectOfType<GroupFollowers>();
-            var unitsToDelete = new List<Unit>();
-
-            if (groupFollowers != null && groupFollowers.CurrentUnits != null && groupFollowers.CurrentUnits.Count > 0)
-            {
-                // Use mass selection from EditorPlus
-                unitsToDelete.AddRange(groupFollowers.CurrentUnits);
-                Plugin.Logger?.LogInfo($"[EditorPlus] Delete: Using GroupFollowers selection: {unitsToDelete.Count} units");
-            }
-            else
-            {
-                // Fallback to vanilla selection
-                var selection = SceneSingleton<UnitSelection>.i;
-                if (selection?.SelectionDetails != null)
-                {
-                    var details = selection.SelectionDetails;
-                    if (details is MultiSelectSelectionDetails multi)
-                    {
-                        foreach (var item in multi.Items)
-                        {
-                            if (item is UnitSelectionDetails usd && usd.Unit != null)
-                                unitsToDelete.Add(usd.Unit);
-                        }
-                    }
-                    else if (details is UnitSelectionDetails single && single.Unit != null)
-                    {
-                        unitsToDelete.Add(single.Unit);
-                    }
-                }
-            }
+            List<Unit> unitsToDelete = EditorSelectionHelper.ResolveSelectedUnits(selection, groupFollowers, out string src);
+            Plugin.Logger?.LogInfo($"[EditorPlus] Delete: source={src}, {unitsToDelete.Count} unit(s)");
 
             if (unitsToDelete.Count == 0)
             {

@@ -361,3 +361,22 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# EditorPlus specific
+*.zip
+*.dll
+*.pdb
+ATF EDITOR PLUS/
+WORKING PERFECT/
+bin/
+obj/
+COPY AND PASTE MOD SOURCE CODE/
+original/
+CHANGELOG.txt
+
+# System/user directories (should not be in repo)
+.cursor/
+AppData/
+.dbus-keyrings/
+.dotnet/
+.nuget/
