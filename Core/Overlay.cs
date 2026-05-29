@@ -354,7 +354,7 @@ namespace EditorPlus
             rt.offsetMax = new(rt.offsetMax.x * factor, rt.offsetMax.y);
             _nameInputShrunk = true;
         }
-        private static Button EnsureToolbarButton(Transform parent, Button template, string goName, string hoverText, Action onClick)
+        private static Button EnsureToolbarButton(Transform parent, Button template, string goName, string labelText, Action onClick)
         {
             Transform existingTf = parent.Find(goName);
             GameObject go = existingTf ? existingTf.gameObject : Instantiate(template.gameObject, parent);
@@ -364,8 +364,10 @@ namespace EditorPlus
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() => onClick?.Invoke());
 
-            ShowHoverText label = go.GetComponentInChildren<ShowHoverText>(true);
-            if (label) label.SetText(hoverText);
+            ShowHoverText hover = go.GetComponentInChildren<ShowHoverText>(true);
+            if (hover) hover.SetText(labelText);
+            foreach (TMP_Text tmp in go.GetComponentsInChildren<TMP_Text>(true))
+                tmp.text = labelText;
 
             go.transform.SetAsLastSibling();
             return btn;
@@ -427,7 +429,7 @@ namespace EditorPlus
                 });
 
             _gridToggleButton ??= EnsureToolbarButton(
-                parent, template, "EditorPlusGridButton", "Grid",
+                parent, template, "EditorPlusGridButton", "Graph Grid",
                 () =>
                 {
                     if (!IsInMissionEditor() || !EnsureOverlayLoaded()) return;

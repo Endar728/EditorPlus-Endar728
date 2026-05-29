@@ -10,6 +10,8 @@ namespace EditorPlus.Patches
     [HarmonyPatch]
     internal static class EditorHandle_ClampY_Patch
     {
+        static bool Prepare() => TargetMethod() != null;
+
         static MethodBase TargetMethod()
         {
             // This patch is optional - if ClampY method doesn't exist, skip the patch

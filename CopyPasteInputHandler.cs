@@ -107,15 +107,15 @@ namespace EditorPlus
             
             if (Input.GetKeyDown(KeyCode.V))
             {
-                // Don't allow paste if one is already in progress (async spawn)
                 if (_isPasting)
                 {
                     Plugin.Logger?.LogWarning("[EditorPlus] Paste already in progress, ignoring");
                     return;
                 }
-                // No time debounce on paste — repeat Ctrl+V should work; _isPasting prevents overlap
+
                 Plugin.Logger?.LogInfo("[EditorPlus] Ctrl+V pressed - Pasting at cursor");
                 GroupCopyPaste.PasteGroupAtCursor();
+
                 Input.ResetInputAxes();
                 return;
             }

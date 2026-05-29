@@ -2,8 +2,8 @@ using HarmonyLib;
 using UnityEngine;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Collections;
+using NuclearOption.MissionEditorScripts;
 
 namespace EditorPlus.Patches
 {
@@ -13,6 +13,13 @@ namespace EditorPlus.Patches
     /// </summary>
     internal static class FreeCameraCollisionPatch
     {
+        /// <summary>
+        /// Free-camera collision bypass must only run in the mission editor. In multiplayer / normal flight
+        /// the gameplay camera is parented to the aircraft; touching the parent disables the vehicle's
+        /// CharacterController and colliders (fall through carrier deck, desync).
+        /// </summary>
+        internal static bool IsMissionEditorActive() => SceneSingleton<MissionEditor>.i != null;
+
         /// <summary>
         /// MonoBehaviour to disable camera collision components
         /// </summary>
@@ -39,6 +46,9 @@ namespace EditorPlus.Patches
 
             private void InitializeCameraControl()
             {
+                if (!IsMissionEditorActive())
+                    return;
+
                 // Try multiple ways to find the camera
                 _camera = Camera.main;
                 if (_camera == null)
@@ -74,6 +84,9 @@ namespace EditorPlus.Patches
 
             private void Update()
             {
+                if (!IsMissionEditorActive())
+                    return;
+
                 if (!_hasInitialized)
                 {
                     InitializeCameraControl();
@@ -108,11 +121,7 @@ namespace EditorPlus.Patches
                     _camera.gameObject.layer = noCollisionLayer;
                 }
 
-                // Also set parent to no-collision layer if it exists
-                if (_camera.transform.parent != null && _camera.transform.parent.gameObject.layer != noCollisionLayer)
-                {
-                    _camera.transform.parent.gameObject.layer = noCollisionLayer;
-                }
+                // Do not change parent layer — in flight the parent is often the player aircraft.
             }
 
             private void DisableCameraCollisionComponents()
@@ -148,32 +157,7 @@ namespace EditorPlus.Patches
                     }
                 }
 
-                // Also check parent objects for collision components
-                var parent = _camera.transform.parent;
-                if (parent != null)
-                {
-                    var parentController = parent.GetComponent<CharacterController>();
-                    if (parentController != null && parentController.enabled)
-                    {
-                        parentController.enabled = false;
-                    }
-
-                    var parentRigidbody = parent.GetComponent<Rigidbody>();
-                    if (parentRigidbody != null && !parentRigidbody.isKinematic)
-                    {
-                        parentRigidbody.isKinematic = true;
-                        parentRigidbody.useGravity = false;
-                    }
-
-                    var parentColliders = parent.GetComponents<Collider>();
-                    foreach (var col in parentColliders)
-                    {
-                        if (col != null && col.enabled)
-                        {
-                            col.enabled = false;
-                        }
-                    }
-                }
+                // Do not disable parent's CharacterController / colliders — that is the playable vehicle in MP.
             }
         }
 
@@ -214,6 +198,9 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(Vector3 position, float radius, int layerMask, ref bool __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null)
                 {
@@ -237,6 +224,9 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(Vector3 point1, Vector3 point2, float radius, int layerMask, ref bool __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null && radius < 10f)
                 {
@@ -259,6 +249,9 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(Vector3 origin, Vector3 direction, float maxDistance, int layerMask, ref bool __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null)
                 {
@@ -281,6 +274,9 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(Vector3 origin, Vector3 direction, RaycastHit[] results, float maxDistance, int layerMask, ref int __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null)
                 {
@@ -303,6 +299,9 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(Vector3 origin, Vector3 direction, float maxDistance, int layerMask, ref RaycastHit[] __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null)
                 {
@@ -325,10 +324,14 @@ namespace EditorPlus.Patches
         {
             static bool Prefix(CharacterController __instance, Vector3 motion, ref CollisionFlags __result)
             {
+                if (!IsMissionEditorActive())
+                    return true;
+
                 var cam = Camera.main;
                 if (cam != null)
                 {
-                    if (__instance.transform == cam.transform || __instance.transform == cam.transform.parent)
+                    // Only the camera's own controller — never the parent (playable craft).
+                    if (__instance.transform == cam.transform)
                     {
                         // Allow the move to proceed without collision checks
                         __instance.transform.position += motion;

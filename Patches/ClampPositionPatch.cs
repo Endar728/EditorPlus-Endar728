@@ -46,12 +46,8 @@ namespace EditorPlus.Patches
         
         static void Postfix(ref GlobalPosition __result, GlobalPosition __state)
         {
-            // If no clip is enabled, restore the original position
             if (Plugin.Instance != null && Plugin.Instance.ignoreTerrain)
-            {
-                __result = __state; // Restore original position
-                Plugin.Logger?.LogInfo($"[EditorPlus] No clip: ClampPosition blocked, restored original: {__state.AsVector3()}");
-            }
+                __result = __state;
         }
     }
 }

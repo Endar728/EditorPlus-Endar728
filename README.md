@@ -1,6 +1,6 @@
 # EditorPlus
 
-A bepinex mod to enhance the Nuclear Option mission editor experience.
+A BepInEx mod to enhance the Nuclear Option mission editor experience.
 
 ### New UI
 * Nodegraph-based objective/outcome UI, click and drag on ports to change connections, hover over a connection or port and press delete to remove connections.
@@ -44,9 +44,13 @@ A bepinex mod to enhance the Nuclear Option mission editor experience.
 
 ## Version Information
 
-**Current Version**: 1.5.1  
+**Current Version**: 1.5.2  
 **Updated by**: Endar728  
 **Original Creator**: nikkorap (v1.4.2)
+
+### What's New in v1.5.2 (Updated by Endar728)
+- **Carrier deck / multiplayer fix** — Free-camera collision bypass only runs in the mission editor
+- **Toolbar** — Graph grid button shows a visible **Graph Grid** label
 
 ### What's New in v1.5.0 (Updated by Endar728)
 - ⚠️ **Copy-Paste Functionality** - Complete new feature system (Ctrl+C/V/D) - **DID NOT EXIST in v1.4.2**
