@@ -1,115 +1,112 @@
 # EditorPlus
 
-A bepinex mod to enhance the Nuclear Option mission editor experience.
+A [BepInEx](https://docs.bepinex.dev/) mod that enhances the **Nuclear Option** mission editor with a node graph, multi-unit workflows, blueprint save/paste, and quality-of-life tools.
 
-### New UI
-* Nodegraph-based objective/outcome UI, click and drag on ports to change connections, hover over a connection or port and press delete to remove connections.
-* Ghost lines from nodes to units, airbases, and waypoints.
-* Add selected units to a node: open Node UI, hover the node, Shift + LMB.
+**Current version:** 1.6.2  
+**Maintained by:** [Endar728](https://github.com/Endar728) — [EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728)  
+**Original author:** [nikkorap](https://github.com/nikkorap/EditorPlus) (v1.4.2)
 
-### Group unit selection
-* Group selection: `Shift` + `LMB` drag to box select; click any selected unit to set the pivot.
-* Remove and Faction settings apply to all selected units.
+![EditorPlus mission editor screenshot](https://github.com/user-attachments/assets/6489d11f-7bdb-4868-85cf-6edbeec75d87)
 
-### Unit placement
-* Rapid placement of units while holding `Ctrl`.
-* Toggle to enable hold position when placing new units.
-* Grid snapping (WIP).
-* Toggle terrain collision.
-* hold `Ctrl` to switch between position and rotation.
-* Removed height limits.
+## Install
 
-### Atomic Builder ⚠️ NEW IN v1.6.x
-Integrated in-editor port of the desktop Atomic Builder workflow (compatible with existing desktop `*.json` blueprints).
+### 1. BepInEx 5 (Mono)
 
-* **Builder** toolbar button opens a side panel (Blueprint + Library tabs).
-* **Save blueprint** — captures units within a radius (selection centroid → all placed units → cursor); writes JSON to `<game folder>/Blueprints/`.
-* **Paste blueprint** — **Ctrl+Alt+V** at cursor (`_ATOM_PASTE_*` name suffixes).
-* **Ctrl+V** — still pastes **copied unit groups** only (Ctrl+C first).
-* **Blueprint library** — search and select `.json` files from the game `Blueprints` folder (auto-created on load).
+1. Install [BepInEx 5 Mono](https://github.com/BepInEx/BepInEx) into your Nuclear Option game folder (where `NuclearOption.exe` lives).
+2. Launch the game once so BepInEx generates its config files.
+3. In `Nuclear Option\BepInEx\config\BepInEx.cfg`, set:
 
-### Copy-Paste Functionality ⚠️ NEW IN v1.5.0
-**This feature was added by Endar728 in v1.5.0 and did NOT exist in the original v1.4.2 by nikkorap.**
-
-* **Mass Copy (Ctrl+C)**: Copy all selected units with their relative positions, rotations, and properties
-* **Mass Paste (Ctrl+V)**: Paste copied units at cursor (raycast hit); formation shape kept via relative offsets
-* **Duplicate in Place (Ctrl+D)**: Duplicate selected units at their current location with a small offset
-* **Paste height**: Anchor uses the surface under the cursor (full global position from hit), not the copied group’s global Y (avoids wrong placement when center Y is map datum / 0)
-* **Multi-Unit Support**: Copy and paste entire groups of units while maintaining their spatial relationships
-* **Smart Input Detection**: Unit copy-paste is automatically disabled when typing in text input fields, preventing conflicts with text copy-paste operations
-* **Unique Name Generation**: Each pasted/duplicated unit receives a unique name to prevent mission corruption (Fixed in v1.5.0)
-
-### Mass Delete ⚠️ NEW IN v1.5.0
-**This feature was added by Endar728 in v1.5.0 and did NOT exist in the original v1.4.2 by nikkorap.**
-
-* **Delete Key**: Press Delete to remove all selected units at once
-* Works seamlessly with group selection system
-
-### other
-* Extended all dropdowns.
-* Automatic conflict resolution with UnitCopyPaste mod (disables conflicting handler) ⚠️ NEW IN v1.5.0
-
----
-
-## Version Information
-
-**Current Version**: 1.6.2  
-**Updated by**: Endar728  
-**Original Creator**: nikkorap (v1.4.2)  
-**Prior release line**: [Endar728/EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728/releases) (1.6.1)
-
-### What's New in v1.6.2 (Updated by Endar728)
-- **Duplicate button** — **Tools → Duplicate** (Ctrl+D still works)
-- **Batch rename** — Rename multiple selected units at once with a prefix + number
-- **Toolbar cleanup** — Duplicate, batch rename, and graph grid grouped under **Tools**; **Builder** label shortened
-
-See [RELEASE_1.6.2.md](RELEASE_1.6.2.md) for full upgrade notes from 1.6.1.
-
-### What's New in v1.6.1 (Updated by Endar728)
-- **Atomic Builder** — In-editor blueprint save/paste, Library tab, game-folder `Blueprints/`, mission-editor styling
-- **Ctrl+Alt+V** — Blueprint paste; **Ctrl+V** — unit groups only
-- **Blueprint capture fix** — Saves actual units in radius (no more empty 0-object blueprints)
-
-See [RELEASE_1.6.1.md](RELEASE_1.6.1.md) for full upgrade notes from 1.5.2.
-
-### What's New in v1.5.0 (Updated by Endar728)
-- ⚠️ **Copy-Paste Functionality** - Complete new feature system (Ctrl+C/V/D) - **DID NOT EXIST in v1.4.2**
-- ⚠️ **Mass Delete** - Delete key support - **DID NOT EXIST in v1.4.2**
-- Enhanced hold position system (improvements to existing feature)
-- Enhanced no clip mode (improvements to existing feature)
-- Free camera collision disabled (new feature)
-- Critical bug fix: Copy-paste name collision bug
-
-### Original Features (v1.4.2 by nikkorap)
-- Node graph UI
-- Group unit selection
-- Unit placement features
-- Hold position toggle (basic)
-- Terrain collision toggle (basic)
-- Extended dropdowns
-
-If you encounter any bugs then please report them. Feedback is appreciated!
-<img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/6489d11f-7bdb-4868-85cf-6edbeec75d87" />
-
-
-## How to install BepInEx (5 mono) guide [https://docs.bepinex.dev/articles/user_guide/installation/index.html]
-
-TLDR:
-1. Download the correct version of BepInEx (bepinex 5 mono) [https://github.com/BepInEx/BepInEx]
-2. Extract the contents into the game root (where [NuclearOption.exe] lives)
-3. Start the game once to generate configuration files.
-4. Open [Nuclear Option\BepInEx\config\BepInEx.cfg] and make sure that the setting 
+   ```ini
    [Chainloader]
-   HideGameManagerObject = true.
+   HideGameManagerObject = true
+   ```
 
-5. (optional) also edit 
-   [Logging.Console]
-   Enabled = true.
+See the [BepInEx installation guide](https://docs.bepinex.dev/articles/user_guide/installation/index.html) for details.
 
-(you can also change bepinex settings ingame using the Mod Configuration manager)
+### 2. EditorPlus
 
+From the [latest release](https://github.com/Endar728/EditorPlus-Endar728/releases), copy into `Nuclear Option\BepInEx\plugins\` (any subfolder is fine):
 
-## How to install mods for BepInEx?
+- `com.nikkorap.EditorPlus.dll`
+- `Newtonsoft.Json.dll` **(required)**
 
-- in the downloaded zip file there is a folder, place it in [Nuclear Option\BepInEx\plugins\ (optional folder)]
-- the mod .dll and .nobp file must be together in the same folder, they can be placed under any subfolder of plugins
+Blueprints are saved to `<game install>\Blueprints\` — that folder is created automatically when the mod loads.
+
+## Mission editor toolbar
+
+| Button | What it does |
+|--------|----------------|
+| **Graph** | Open the objective/outcome node graph overlay |
+| **Builder** | Open Atomic Builder (blueprint save/paste panel) |
+| **Tools** | Duplicate, batch rename, and graph grid |
+| **Hold Pos** | Keep newly placed / pasted units from drifting |
+| **noclip** | Ignore terrain clamping while editing |
+
+## Hotkeys
+
+| Shortcut | Action |
+|----------|--------|
+| **Ctrl+C** | Copy selected units |
+| **Ctrl+V** | Paste copied units at cursor |
+| **Ctrl+D** | Duplicate selection in place (small offset) |
+| **Ctrl+Alt+V** | Paste blueprint at cursor |
+| **Delete** | Remove all selected units |
+| **Shift + drag** | Box-select multiple units |
+
+Unit hotkeys are disabled while you are typing in a text field.
+
+## Features
+
+### Copy, paste, and duplicate
+
+- Copy multi-unit groups with relative positions, rotations, and properties.
+- Paste at the cursor while keeping formation shape.
+- Duplicate in place via **Ctrl+D** or **Tools → Duplicate**.
+- Each pasted/duplicated unit gets a unique name to avoid mission JSON corruption.
+- Automatically disables the conflicting **UnitCopyPaste** mod handler when present.
+
+### Batch rename *(v1.6.2)*
+
+- **Tools → Batch rename…** opens a panel in the bottom-right of the editor.
+- Select multiple units, enter a **name prefix** and **start number**, then apply.
+- Names are assigned in order (`Squad_A_1`, `Squad_A_2`, …) with uniqueness checks across the mission.
+
+### Atomic Builder *(v1.6.x)*
+
+In-editor blueprint save and paste, compatible with desktop Atomic Builder JSON files.
+
+- **Builder** toolbar button → side panel with blueprint name, capture radius, **Save blueprint**, and **Paste at cursor**.
+- **Ctrl+Alt+V** pastes a blueprint at the editor camera / cursor.
+- **Ctrl+V** is reserved for copied unit groups only.
+
+### Node graph UI
+
+- Drag connections between objective and outcome ports.
+- Hover a connection or port and press **Delete** to remove it.
+- Ghost lines from nodes to units, airbases, and waypoints.
+- **Shift + LMB** on a node to add the current unit selection to it.
+
+### Group selection
+
+- **Shift + LMB drag** to box-select units.
+- Click any selected unit to set the group pivot.
+- Faction changes and delete apply to the whole selection.
+
+### Placement and camera
+
+- Hold **Ctrl** for rapid unit placement.
+- Hold **Ctrl** to switch between move and rotate handles.
+- **Hold Pos** and **noclip** toggles on the toolbar.
+- Free-camera collision disabled in the mission editor only.
+- Extended dropdown lists and removed height limits.
+
+## Credits and lineage
+
+- **nikkorap** — original EditorPlus (node graph, group selection, placement tools)
+- **Endar728** — copy/paste, mass delete, hold position, noclip, free camera fixes, Atomic Builder integration, duplicate button, batch rename, and toolbar improvements
+
+Copy-paste, mass delete, and related multi-unit workflow features were added in the Endar728 release line and were not part of the original v1.4.2.
+
+## Feedback
+
+Found a bug or have a suggestion? Open an issue on [GitHub](https://github.com/Endar728/EditorPlus-Endar728/issues).
