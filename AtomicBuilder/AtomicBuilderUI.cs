@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using NuclearOption.MissionEditorScripts;
 using TMPro;
 using UnityEngine;
@@ -8,31 +6,17 @@ using UnityEngine.UI;
 
 namespace EditorPlus.AtomicBuilder
 {
-    /// <summary>In-editor Atomic Builder panel: blueprint library, save/paste.</summary>
+    /// <summary>In-editor Atomic Builder panel: blueprint save/paste (no on-disk library browser).</summary>
     internal sealed class AtomicBuilderUI : MonoBehaviour
     {
         static AtomicBuilderUI _instance;
         static string _pendingStatus;
         static string _lastBlueprintName;
-        static string _libraryFilter = "";
 
         GameObject _panelRoot;
         TMP_InputField _nameInput;
         TMP_InputField _radiusInput;
-        TMP_InputField _librarySearchInput;
         TMP_Text _statusText;
-        TMP_Text _pathText;
-        TMP_Text _libraryCountText;
-        Transform _listContent;
-        RectTransform _scrollContent;
-        string _selectedLibraryName;
-
-        GameObject _tabBlueprint;
-        GameObject _tabLibrary;
-        readonly List<Button> _tabButtons = new List<Button>();
-        readonly List<TextMeshProUGUI> _tabLabels = new List<TextMeshProUGUI>();
-        readonly List<GameObject> _libraryRowObjects = new List<GameObject>();
-        int _activeTab;
 
         internal static void EnsureExists()
         {
@@ -98,20 +82,7 @@ namespace EditorPlus.AtomicBuilder
             }
             _instance._nameInput = null;
             _instance._radiusInput = null;
-            _instance._librarySearchInput = null;
             _instance._statusText = null;
-            _instance._pathText = null;
-            _instance._libraryCountText = null;
-            _instance._listContent = null;
-            _instance._scrollContent = null;
-            _instance._tabBlueprint = null;
-            _instance._tabLibrary = null;
-            _instance._tabButtons.Clear();
-            _instance._tabLabels.Clear();
-            _instance._libraryRowObjects.Clear();
-            _instance._activeTab = 0;
-            _instance._selectedLibraryName = null;
-            _libraryFilter = "";
         }
 
         void SetVisible(bool on)
@@ -119,10 +90,7 @@ namespace EditorPlus.AtomicBuilder
             if (_panelRoot == null && !BuildUi()) return;
             _panelRoot.SetActive(on);
             if (on)
-            {
                 _panelRoot.transform.SetAsLastSibling();
-                RefreshBlueprintList();
-            }
         }
 
         bool BuildUi()
@@ -142,7 +110,7 @@ namespace EditorPlus.AtomicBuilder
             panelRt.anchorMin = new Vector2(1f, 0.5f);
             panelRt.anchorMax = new Vector2(1f, 0.5f);
             panelRt.pivot = new Vector2(1f, 0.5f);
-            panelRt.sizeDelta = new Vector2(380f, 620f);
+            panelRt.sizeDelta = new Vector2(380f, 420f);
             panelRt.anchoredPosition = new Vector2(-10f, 0f);
             _panelRoot.GetComponent<Image>().color = MissionEditorStyling.PanelBackground;
             _panelRoot.transform.SetAsLastSibling();
@@ -157,95 +125,20 @@ namespace EditorPlus.AtomicBuilder
 
             var titleLabel = AddLayoutLabel(_panelRoot.transform, "Atomic Builder", 18, FontStyles.Bold, 28f);
             titleLabel.color = MissionEditorStyling.AccentGreen;
-            _pathText = AddLayoutLabel(_panelRoot.transform, "Blueprints: …", 11, FontStyles.Normal, 28f);
-            _pathText.color = MissionEditorStyling.LabelMuted;
-            _pathText.enableWordWrapping = true;
 
-            BuildTabBar(_panelRoot.transform);
-            BuildTabPages(_panelRoot.transform);
-            BuildFooter(_panelRoot.transform);
-
-            SelectTab(0);
-            UpdatePathLabel();
-            _panelRoot.SetActive(false);
-            if (!string.IsNullOrEmpty(_pendingStatus))
-                SetStatus(_pendingStatus);
-            return true;
-        }
-
-        void BuildTabBar(Transform parent)
-        {
-            var bar = new GameObject("TabBar", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-            bar.transform.SetParent(parent, false);
-            var barLe = bar.AddComponent<LayoutElement>();
-            barLe.minHeight = 34f;
-            barLe.preferredHeight = 34f;
-            var hlg = bar.GetComponent<HorizontalLayoutGroup>();
-            hlg.spacing = 4f;
-            hlg.childForceExpandWidth = true;
-            hlg.childControlWidth = true;
-            hlg.childControlHeight = true;
-            hlg.childForceExpandHeight = false;
-
-            _tabButtons.Clear();
-            _tabLabels.Clear();
-            AddTabButton(bar.transform, "Blueprint", 0);
-            AddTabButton(bar.transform, "Library", 1);
-        }
-
-        void AddTabButton(Transform parent, string label, int index)
-        {
-            var go = new GameObject(label + "Tab", typeof(RectTransform), typeof(Image), typeof(Button), typeof(LayoutElement));
-            go.transform.SetParent(parent, false);
-            var tabLe = go.GetComponent<LayoutElement>();
-            tabLe.minHeight = 30f;
-            tabLe.preferredHeight = 30f;
-            tabLe.flexibleWidth = 1f;
-            var tabImg = go.GetComponent<Image>();
-            tabImg.color = MissionEditorStyling.TabInactive;
-            tabImg.raycastTarget = true;
-            var btn = go.GetComponent<Button>();
-            btn.targetGraphic = tabImg;
-            int captured = index;
-            MissionEditorStyling.ApplyTabButton(btn, captured == _activeTab);
-            btn.onClick.AddListener(() => SelectTab(captured));
-            _tabButtons.Add(btn);
-
-            var textGo = new GameObject("T", typeof(RectTransform), typeof(TextMeshProUGUI));
-            textGo.transform.SetParent(go.transform, false);
-            StretchRect(textGo.GetComponent<RectTransform>());
-            var tmp = textGo.GetComponent<TextMeshProUGUI>();
-            tmp.text = label;
-            tmp.fontSize = 13;
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.color = MissionEditorStyling.TabLabelColor(captured == _activeTab);
-            tmp.raycastTarget = false;
-            _tabLabels.Add(tmp);
-        }
-
-        void BuildTabPages(Transform parent)
-        {
-            var body = new GameObject("TabBody", typeof(RectTransform));
-            body.transform.SetParent(parent, false);
+            var body = new GameObject("Body", typeof(RectTransform));
+            body.transform.SetParent(_panelRoot.transform, false);
             var bodyLe = body.AddComponent<LayoutElement>();
             bodyLe.flexibleHeight = 1f;
             bodyLe.minHeight = 200f;
             StretchRect(body.GetComponent<RectTransform>());
+            BuildBlueprintTab(body.transform);
+            BuildFooter(_panelRoot.transform);
 
-            _tabBlueprint = CreateTabPage(body.transform, "TabBlueprint");
-            _tabLibrary = CreateTabPage(body.transform, "TabLibrary");
-
-            BuildBlueprintTab(_tabBlueprint.transform);
-            BuildLibraryTab(_tabLibrary.transform);
-        }
-
-        static GameObject CreateTabPage(Transform parent, string name)
-        {
-            var page = new GameObject(name, typeof(RectTransform));
-            page.transform.SetParent(parent, false);
-            StretchRect(page.GetComponent<RectTransform>());
-            page.SetActive(false);
-            return page;
+            _panelRoot.SetActive(false);
+            if (!string.IsNullOrEmpty(_pendingStatus))
+                SetStatus(_pendingStatus);
+            return true;
         }
 
         void BuildBlueprintTab(Transform parent)
@@ -264,80 +157,6 @@ namespace EditorPlus.AtomicBuilder
             AddLayoutButton(parent, "Paste at cursor (Ctrl+Alt+V)", OnPaste, primary: true);
             var hint = AddLayoutLabel(parent, "Ctrl+Alt+V pastes blueprint at cursor. Ctrl+V is for copied units only.", 11, FontStyles.Italic, 44f);
             hint.color = MissionEditorStyling.LabelSecondary;
-        }
-
-        void BuildLibraryTab(Transform parent)
-        {
-            var pageVlg = parent.gameObject.AddComponent<VerticalLayoutGroup>();
-            pageVlg.spacing = 6f;
-            pageVlg.childControlWidth = true;
-            pageVlg.childControlHeight = true;
-            pageVlg.childForceExpandWidth = true;
-            pageVlg.childForceExpandHeight = false;
-            pageVlg.padding = new RectOffset(4, 4, 4, 4);
-
-            var searchRow = new GameObject("SearchRow", typeof(RectTransform), typeof(HorizontalLayoutGroup));
-            searchRow.transform.SetParent(parent, false);
-            var searchLe = searchRow.AddComponent<LayoutElement>();
-            searchLe.minHeight = 34f;
-            searchLe.preferredHeight = 34f;
-            var searchHlg = searchRow.GetComponent<HorizontalLayoutGroup>();
-            searchHlg.spacing = 6f;
-            searchHlg.childForceExpandWidth = true;
-            searchHlg.childControlHeight = true;
-
-            var searchLabel = AddLayoutLabel(searchRow.transform, "Filter", 12, FontStyles.Normal, 0f);
-            searchLabel.GetComponent<LayoutElement>().minWidth = 44f;
-            _librarySearchInput = AddLayoutInput(searchRow.transform, "", "");
-            _librarySearchInput.onValueChanged.AddListener(f =>
-            {
-                _libraryFilter = f ?? "";
-                RefreshBlueprintList();
-            });
-
-            _libraryCountText = AddLayoutLabel(parent, "", 11, FontStyles.Normal, 22f);
-            _libraryCountText.color = MissionEditorStyling.LabelMuted;
-
-            var scrollArea = new GameObject("ScrollArea", typeof(RectTransform));
-            scrollArea.transform.SetParent(parent, false);
-            var scrollLe = scrollArea.AddComponent<LayoutElement>();
-            scrollLe.flexibleHeight = 1f;
-            scrollLe.minHeight = 100f;
-            StretchRect(scrollArea.GetComponent<RectTransform>());
-
-            var scrollBg = scrollArea.AddComponent<Image>();
-            scrollBg.color = MissionEditorStyling.ScrollBackground;
-            scrollBg.raycastTarget = false;
-
-            scrollArea.AddComponent<RectMask2D>();
-            var scroll = scrollArea.AddComponent<ScrollRect>();
-            scroll.viewport = scrollArea.GetComponent<RectTransform>();
-            scroll.horizontal = false;
-            scroll.vertical = true;
-            scroll.movementType = ScrollRect.MovementType.Clamped;
-            scroll.scrollSensitivity = 20f;
-
-            var contentGo = new GameObject("Content", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
-            contentGo.transform.SetParent(scroll.viewport, false);
-            var contentRt = contentGo.GetComponent<RectTransform>();
-            _scrollContent = contentRt;
-            contentRt.anchorMin = new Vector2(0, 1);
-            contentRt.anchorMax = new Vector2(1, 1);
-            contentRt.pivot = new Vector2(0.5f, 1);
-            contentRt.sizeDelta = new Vector2(0, 0);
-            var contentVlg = contentGo.GetComponent<VerticalLayoutGroup>();
-            contentVlg.childForceExpandHeight = false;
-            contentVlg.childForceExpandWidth = true;
-            contentVlg.spacing = 1f;
-            contentVlg.padding = new RectOffset(4, 4, 4, 4);
-            contentVlg.childControlWidth = true;
-            contentVlg.childControlHeight = true;
-            contentGo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            scroll.content = contentRt;
-            _listContent = contentRt;
-
-            RefreshBlueprintList();
         }
 
         void BuildFooter(Transform parent)
@@ -362,40 +181,6 @@ namespace EditorPlus.AtomicBuilder
             AddLayoutButton(footer.transform, "Close", () => SetVisible(false), primary: false);
         }
 
-        void SelectTab(int index)
-        {
-            _activeTab = Mathf.Clamp(index, 0, 1);
-            SetTabPageActive(_tabBlueprint, _activeTab == 0);
-            SetTabPageActive(_tabLibrary, _activeTab == 1);
-            if (_activeTab == 1)
-                RefreshBlueprintList();
-
-            for (int i = 0; i < _tabButtons.Count; i++)
-            {
-                bool active = i == _activeTab;
-                MissionEditorStyling.ApplyTabButton(_tabButtons[i], active);
-                if (i < _tabLabels.Count && _tabLabels[i] != null)
-                    _tabLabels[i].color = MissionEditorStyling.TabLabelColor(active);
-            }
-
-            if (_panelRoot != null)
-                LayoutRebuilder.ForceRebuildLayoutImmediate(_panelRoot.GetComponent<RectTransform>());
-        }
-
-        static void SetTabPageActive(GameObject page, bool active)
-        {
-            if (page == null) return;
-            page.SetActive(active);
-            if (active)
-                page.transform.SetAsLastSibling();
-        }
-
-        void UpdatePathLabel()
-        {
-            if (_pathText != null)
-                _pathText.text = "Blueprints: " + AtomicBuilderPaths.BlueprintsRoot;
-        }
-
         void OnSave()
         {
             string name = _nameInput?.text?.Trim();
@@ -404,10 +189,7 @@ namespace EditorPlus.AtomicBuilder
 
             Vector3 center = BlueprintCapture.GetCaptureCenter();
             if (BlueprintCapture.TrySaveBlueprint(name, radius, center, out string msg))
-            {
                 SetStatus(msg);
-                RefreshBlueprintList();
-            }
             else
                 SetStatus(msg);
         }
@@ -417,97 +199,13 @@ namespace EditorPlus.AtomicBuilder
             string name = _nameInput?.text?.Trim();
             if (string.IsNullOrEmpty(name))
             {
-                SetStatus("Enter a blueprint name on the Blueprint tab.");
+                SetStatus("Enter a blueprint name.");
                 return;
             }
             RememberBlueprintName(name);
             Vector3 center = BlueprintPaste.GetPasteCenter();
             BlueprintPaste.TryPasteBlueprint(name, center, out string msg);
             SetStatus(msg);
-        }
-
-        void RefreshBlueprintList()
-        {
-            if (_listContent == null) return;
-
-            for (int i = _listContent.childCount - 1; i >= 0; i--)
-                Destroy(_listContent.GetChild(i).gameObject);
-            _libraryRowObjects.Clear();
-
-            var names = AtomicBuilderPaths.ListBlueprintNames().ToList();
-            string filter = (_librarySearchInput != null ? _librarySearchInput.text : _libraryFilter) ?? "";
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                string f = filter.Trim();
-                names = names.Where(n => n.IndexOf(f, System.StringComparison.OrdinalIgnoreCase) >= 0).ToList();
-            }
-
-            if (_libraryCountText != null)
-                _libraryCountText.text = names.Count == 0 ? "No blueprint files in folder." : $"{names.Count} blueprint(s)";
-
-            foreach (string name in names)
-            {
-                string captured = name;
-                bool selected = captured == _selectedLibraryName;
-                var row = CreateLibraryRow(_listContent, captured, selected);
-                _libraryRowObjects.Add(row);
-            }
-
-            if (names.Count > 0 && string.IsNullOrEmpty(_selectedLibraryName))
-            {
-                _selectedLibraryName = names[0];
-                if (_nameInput != null)
-                    _nameInput.SetTextWithoutNotify(_selectedLibraryName);
-            }
-
-            UpdatePathLabel();
-        }
-
-        GameObject CreateLibraryRow(Transform parent, string blueprintName, bool selected)
-        {
-            var row = new GameObject("Row", typeof(RectTransform), typeof(Image), typeof(Button));
-            row.transform.SetParent(parent, false);
-            var rowImg = row.GetComponent<Image>();
-            rowImg.color = selected
-                ? MissionEditorStyling.RowSelected
-                : MissionEditorStyling.RowBackground;
-
-            var rowLe = row.AddComponent<LayoutElement>();
-            rowLe.minHeight = 28f;
-            rowLe.preferredHeight = 28f;
-
-            var btn = row.GetComponent<Button>();
-            string cap = blueprintName;
-            btn.onClick.AddListener(() => SelectLibraryBlueprint(cap));
-
-            var labelGo = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
-            labelGo.transform.SetParent(row.transform, false);
-            var labelRt = labelGo.GetComponent<RectTransform>();
-            labelRt.anchorMin = new Vector2(0, 0);
-            labelRt.anchorMax = new Vector2(1, 1);
-            labelRt.offsetMin = new Vector2(8, 0);
-            labelRt.offsetMax = new Vector2(-8, 0);
-            var label = labelGo.GetComponent<TextMeshProUGUI>();
-            label.text = blueprintName;
-            label.fontSize = 13;
-            label.color = selected
-                ? MissionEditorStyling.AccentGreen
-                : MissionEditorStyling.LabelPrimary;
-            label.alignment = TextAlignmentOptions.MidlineLeft;
-            label.overflowMode = TextOverflowModes.Ellipsis;
-            label.raycastTarget = false;
-
-            return row;
-        }
-
-        void SelectLibraryBlueprint(string name)
-        {
-            _selectedLibraryName = name;
-            RememberBlueprintName(name);
-            if (_nameInput != null)
-                _nameInput.SetTextWithoutNotify(name);
-            SelectTab(0);
-            SetStatus($"Selected \"{name}\" — Ctrl+Alt+V to paste at cursor.");
         }
 
         static Canvas FindEditorCanvas()

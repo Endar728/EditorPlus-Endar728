@@ -363,6 +363,9 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # EditorPlus specific
+Blueprints/
+AtomicBuilder/Blueprints/
+EditorPlus-Release/
 *.zip
 *.dll
 *.pdb
