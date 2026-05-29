@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Logging;
+using EditorPlus.AtomicBuilder;
 using NuclearOption.MissionEditorScripts;
 using NuclearOption.SavedMission;
 using UnityEngine;
@@ -820,6 +821,9 @@ namespace EditorPlus
 
             return highestY > float.MinValue;
         }
+
+        internal static void ClampSpawnedUnit(Unit unit, SavedUnit savedUnit, UnitDefinition definition) =>
+            ClampUnitToTerrain(unit, savedUnit, definition, Vector3.zero);
 
         private static void ClampUnitToTerrain(Unit unit, SavedUnit savedUnit,
             UnitDefinition definition, Vector3 originOffset)

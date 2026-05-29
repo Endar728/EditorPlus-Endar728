@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using EditorPlus.AtomicBuilder;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using NuclearOption.MissionEditorScripts;
@@ -113,8 +114,35 @@ namespace EditorPlus
                     return;
                 }
 
-                Plugin.Logger?.LogInfo("[EditorPlus] Ctrl+V pressed - Pasting at cursor");
-                GroupCopyPaste.PasteGroupAtCursor();
+                bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+
+                if (alt)
+                {
+                    if (AtomicBuilderUI.TryGetBlueprintNameForPaste(out string blueprintName))
+                    {
+                        Plugin.Logger?.LogInfo($"[EditorPlus] Ctrl+Alt+V — pasting blueprint \"{blueprintName}\" at cursor");
+                        Vector3 center = BlueprintPaste.GetPasteCenter();
+                        BlueprintPaste.TryPasteBlueprint(blueprintName, center, out string bpMsg);
+                        AtomicBuilderUI.SetStatus(bpMsg);
+                    }
+                    else
+                    {
+                        Plugin.Logger?.LogWarning(
+                            "[EditorPlus] Ctrl+Alt+V: no blueprint loaded. Set a name on the Blueprint tab or pick one in Library.");
+                        AtomicBuilderUI.SetStatus("Ctrl+Alt+V: enter or select a blueprint name first.");
+                    }
+                }
+                else if (GroupClipboard.HasData)
+                {
+                    Plugin.Logger?.LogInfo("[EditorPlus] Ctrl+V — pasting copied units at cursor");
+                    GroupCopyPaste.PasteGroupAtCursor();
+                }
+                else
+                {
+                    Plugin.Logger?.LogWarning(
+                        "[EditorPlus] Ctrl+V: clipboard empty. Copy units with Ctrl+C, or paste a blueprint with Ctrl+Alt+V.");
+                    AtomicBuilderUI.SetStatus("Ctrl+V: copy units first (Ctrl+C). Blueprints use Ctrl+Alt+V.");
+                }
 
                 Input.ResetInputAxes();
                 return;

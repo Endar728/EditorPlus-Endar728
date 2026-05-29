@@ -89,6 +89,7 @@ namespace EditorPlus
 
             _overlayToggleButton = null;
             _gridToggleButton = null;
+            _atomicBuilderButton = null;
             _holdPosToggle = null;
             _terrainToggle = null;
             objectivesBtn = null;
@@ -101,6 +102,7 @@ namespace EditorPlus
                 _overlayRoot = null;
             }
             ReflectionUtils.ClearMissionObjectivesCache();
+            AtomicBuilder.AtomicBuilderUI.OnSceneUnloaded();
         }
         private IEnumerator EnsureEditorMenu()
         {

@@ -24,7 +24,7 @@ namespace EditorPlus
         Vector2 _leftPanelOriginalAnchored;
         bool _leftPanelOffsetApplied, _nameInputShrunk;
         const float LeftPanelShiftX = -530f;
-        Button _overlayToggleButton, _gridToggleButton;
+        Button _overlayToggleButton, _gridToggleButton, _atomicBuilderButton;
         Toggle _holdPosToggle, _terrainToggle;
         internal bool holdpos;
         public bool ignoreTerrain;
@@ -401,7 +401,7 @@ namespace EditorPlus
         {
             if (!IsInMissionEditor()) return false;
 
-            if (_overlayToggleButton && _gridToggleButton && _holdPosToggle) return true;
+            if (_overlayToggleButton && _gridToggleButton && _atomicBuilderButton && _holdPosToggle) return true;
 
             if (objectivesBtn == null)
             {
@@ -436,6 +436,14 @@ namespace EditorPlus
                     _view?.ToggleBackgroundAndGrid();
                 });
 
+            _atomicBuilderButton ??= EnsureToolbarButton(
+                parent, template, "EditorPlusAtomicButton", "Atomic Builder",
+                () =>
+                {
+                    if (!IsInMissionEditor()) return;
+                    AtomicBuilder.AtomicBuilderUI.TogglePanel();
+                });
+
             Toggle autoSaveTemplate = parent.GetComponentsInChildren<Toggle>(true)
                 .FirstOrDefault(t => t && string.Equals(t.name, "AutoSaveToggle", StringComparison.OrdinalIgnoreCase));
             _holdPosToggle ??= EnsureToolbarToggle(
@@ -454,7 +462,7 @@ namespace EditorPlus
                 Instance.ignoreTerrain,
                 v => { Instance.ignoreTerrain = v; }
             );
-            return _overlayToggleButton && _gridToggleButton && _holdPosToggle;
+            return _overlayToggleButton && _gridToggleButton && _atomicBuilderButton && _holdPosToggle;
         }
 
     }

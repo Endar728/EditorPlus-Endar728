@@ -1,43 +1,48 @@
 # Changelog
 
-All notable changes to **EditorPlus** are documented here.
+All notable changes to this project are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
-
-## [Unreleased]
-
-*Nothing yet.*
-
----
-
-## [1.5.2] — 2026-04-05
-
-### Fixed
-
-- **Multiplayer / carrier deck:** Free-camera collision handling no longer runs outside the mission editor. It previously disabled physics on the **camera parent** (often the player aircraft), stripped `CharacterController` / collider behavior, and altered global physics queries near the camera—causing falls through carrier decks and server desync. Free-camera bypass now applies only when `MissionEditor` is active.
-
-### Changed
-
-- **Toolbar:** Graph grid button label shows **Graph Grid** on the button face (not hover-only).
-- **Noclip:** Reduced log spam when terrain clamp is bypassed.
-
----
-
-## [1.5.1] — 2026-03-23
-
-### Fixed
-
-- **Group copy/paste — formation scatter** — Paste converts the terrain/cursor anchor once to `GlobalPosition`, then places each unit with `anchorGlobal + relativeOffset`.
-- **Group copy/paste — rotation** — Copy stores `transform.rotation` instead of lagging `SavedUnit.rotation`.
-
----
-
-## [1.5.0] — earlier
-
-### Fixed
-
-- Copy-paste / duplicate **unique name** handling to avoid mission corruption from duplicate unit names.
+## [1.6.1] - 2026-05-28
 
 ### Added
 
-- Multi-unit group copy/paste, formation paste at cursor, terrain-aware formation clamping, and related editor workflow improvements.
+- **Atomic Builder panel** — Mission-editor **Builder** toolbar button; Blueprint and Library tabs; dark grey / green UI aligned with native editor.
+- **Blueprint save** — Radius-based capture from live editor units; writes JSON under `<game folder>/Blueprints/` (folder auto-created on load).
+- **Blueprint paste** — **Ctrl+Alt+V** at cursor; throttled spawn, formation terrain clamp, per-unit terrain snap when collision is on.
+- **Blueprint library** — Lists `.json` files in the game `Blueprints` folder with search/filter.
+
+### Changed
+
+- **Ctrl+V** — Unit group paste only; **Ctrl+Alt+V** is blueprint paste (no hotkey conflict).
+- **Blueprint storage** — `Nuclear Option/Blueprints/` instead of Desktop or `BepInEx/plugins/EditorPlus/Blueprints`.
+- Removed in-editor **grid snap** placement mode (Atomic Builder grid tab / clamp patches).
+
+### Fixed
+
+- **Blueprint save 0 objects** — Global vs transform position mismatch no longer drops all units during filter; rejects empty saves.
+- **Paste “no spawnable units”** — Empty blueprints from the save bug; fixed with capture logic above.
+- **Newtonsoft.Json** — `Newtonsoft.Json.dll` copied beside plugin on build to prevent paste `TypeLoadException`.
+- **Large paste console spam** — Reduced `TerrainHeightMap` noise via terrain clamp and throttled physics during spawn.
+
+## [1.6.0] - 2026-05-24
+
+### Added
+
+- Initial Atomic Builder integration (save/paste UI, library, desktop-compatible JSON).
+
+## [1.5.2] - 2026-04-05
+
+### Fixed
+
+- **Multiplayer / carrier deck:** Free-camera collision handling no longer runs outside the mission editor. It previously disabled physics on the **camera parent** (often the player aircraft), stripped `CharacterController` / collider behavior, and altered global physics queries near the camera—causing falls through carrier decks and server desync. Free-camera bypass now applies only when `MissionEditor` is active, only the camera object’s own components are toggled, and `CharacterController.Move` is no longer patched for the aircraft parent.
+
+## [1.5.1] - 2026-03-23
+
+### Fixed
+
+- **Group copy/paste — formation scatter** — Paste uses a single anchor `GlobalPosition` plus relative offsets (translation-invariant).
+- **Group copy/paste — rotation** — Copy stores `transform.rotation` instead of lagging `SavedUnit.rotation`.
+
+### Added
+
+- Multi-unit group copy/paste, formation paste at cursor, terrain-aware formation clamping.

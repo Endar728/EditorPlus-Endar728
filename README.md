@@ -1,6 +1,6 @@
 # EditorPlus
 
-A BepInEx mod to enhance the Nuclear Option mission editor experience.
+A bepinex mod to enhance the Nuclear Option mission editor experience.
 
 ### New UI
 * Nodegraph-based objective/outcome UI, click and drag on ports to change connections, hover over a connection or port and press delete to remove connections.
@@ -18,6 +18,15 @@ A BepInEx mod to enhance the Nuclear Option mission editor experience.
 * Toggle terrain collision.
 * hold `Ctrl` to switch between position and rotation.
 * Removed height limits.
+
+### Atomic Builder ⚠️ NEW IN v1.6.x
+Integrated in-editor port of the desktop Atomic Builder workflow (compatible with existing desktop `*.json` blueprints).
+
+* **Builder** toolbar button opens a side panel (Blueprint + Library tabs).
+* **Save blueprint** — captures units within a radius (selection centroid → all placed units → cursor); writes JSON to `<game folder>/Blueprints/`.
+* **Paste blueprint** — **Ctrl+Alt+V** at cursor (`_ATOM_PASTE_*` name suffixes).
+* **Ctrl+V** — still pastes **copied unit groups** only (Ctrl+C first).
+* **Blueprint library** — search and select `.json` files from the game `Blueprints` folder (auto-created on load).
 
 ### Copy-Paste Functionality ⚠️ NEW IN v1.5.0
 **This feature was added by Endar728 in v1.5.0 and did NOT exist in the original v1.4.2 by nikkorap.**
@@ -44,13 +53,17 @@ A BepInEx mod to enhance the Nuclear Option mission editor experience.
 
 ## Version Information
 
-**Current Version**: 1.5.2  
+**Current Version**: 1.6.1  
 **Updated by**: Endar728  
-**Original Creator**: nikkorap (v1.4.2)
+**Original Creator**: nikkorap (v1.4.2)  
+**Prior release line**: [Endar728/EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728/releases) (1.5.2)
 
-### What's New in v1.5.2 (Updated by Endar728)
-- **Carrier deck / multiplayer fix** — Free-camera collision bypass only runs in the mission editor
-- **Toolbar** — Graph grid button shows a visible **Graph Grid** label
+### What's New in v1.6.1 (Updated by Endar728)
+- **Atomic Builder** — In-editor blueprint save/paste, Library tab, game-folder `Blueprints/`, mission-editor styling
+- **Ctrl+Alt+V** — Blueprint paste; **Ctrl+V** — unit groups only
+- **Blueprint capture fix** — Saves actual units in radius (no more empty 0-object blueprints)
+
+See [RELEASE_1.6.1.md](RELEASE_1.6.1.md) for full upgrade notes from 1.5.2.
 
 ### What's New in v1.5.0 (Updated by Endar728)
 - ⚠️ **Copy-Paste Functionality** - Complete new feature system (Ctrl+C/V/D) - **DID NOT EXIST in v1.4.2**

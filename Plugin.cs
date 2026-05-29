@@ -32,7 +32,10 @@ namespace EditorPlus
             SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             Logger?.LogInfo("[EditorPlus] Scene event handlers registered");
-            
+
+            AtomicBuilder.AtomicBuilderPaths.EnsureBlueprintsFolder();
+            Logger?.LogInfo($"[EditorPlus] Blueprints folder: {AtomicBuilder.AtomicBuilderPaths.BlueprintsRoot}");
+
             // Create copy-paste handler early to ensure it runs before other mods
             CopyPasteInputHandler.EnsureExists();
             
