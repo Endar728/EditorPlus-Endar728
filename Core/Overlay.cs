@@ -24,7 +24,7 @@ namespace EditorPlus
         Vector2 _leftPanelOriginalAnchored;
         bool _leftPanelOffsetApplied, _nameInputShrunk;
         const float LeftPanelShiftX = -530f;
-        Button _overlayToggleButton, _gridToggleButton, _atomicBuilderButton;
+        Button _overlayToggleButton, _atomicBuilderButton, _toolsButton;
         Toggle _holdPosToggle, _terrainToggle;
         internal bool holdpos;
         public bool ignoreTerrain;
@@ -397,11 +397,17 @@ namespace EditorPlus
             go.transform.SetAsLastSibling();
             return t;
         }
+        private static void DestroyLegacyToolbarButton(Transform parent, string goName)
+        {
+            Transform legacy = parent?.Find(goName);
+            if (legacy != null)
+                Destroy(legacy.gameObject);
+        }
         private bool TryEnsureTopbarToggleButton()
         {
             if (!IsInMissionEditor()) return false;
 
-            if (_overlayToggleButton && _gridToggleButton && _atomicBuilderButton && _holdPosToggle) return true;
+            if (_overlayToggleButton && _atomicBuilderButton && _toolsButton && _holdPosToggle) return true;
 
             if (objectivesBtn == null)
             {
@@ -415,7 +421,18 @@ namespace EditorPlus
 
             Transform parent = template.transform?.parent;
             if (!parent) return false;
-            ShrinkTopbarFirstSibling(parent, 0.5f); //shrink name box for more buttons
+            ShrinkTopbarFirstSibling(parent, 0.45f);
+
+            DestroyLegacyToolbarButton(parent, "EditorPlusGridButton");
+            DestroyLegacyToolbarButton(parent, "EditorPlusDuplicateButton");
+            DestroyLegacyToolbarButton(parent, "EditorPlusRenameButton");
+
+            EditorToolsMenu.ToggleGraphGrid = () =>
+            {
+                if (!IsInMissionEditor() || !EnsureOverlayLoaded()) return;
+                _view?.ToggleBackgroundAndGrid();
+            };
+
             _overlayToggleButton ??= EnsureToolbarButton(
                 parent, template, "EditorPlusToggleButton", "Graph",
                 () =>
@@ -428,20 +445,21 @@ namespace EditorPlus
                     if (show) RebuildGraph();
                 });
 
-            _gridToggleButton ??= EnsureToolbarButton(
-                parent, template, "EditorPlusGridButton", "Graph Grid",
-                () =>
-                {
-                    if (!IsInMissionEditor() || !EnsureOverlayLoaded()) return;
-                    _view?.ToggleBackgroundAndGrid();
-                });
-
             _atomicBuilderButton ??= EnsureToolbarButton(
-                parent, template, "EditorPlusAtomicButton", "Atomic Builder",
+                parent, template, "EditorPlusAtomicButton", "Builder",
                 () =>
                 {
                     if (!IsInMissionEditor()) return;
                     AtomicBuilder.AtomicBuilderUI.TogglePanel();
+                });
+
+            _toolsButton ??= EnsureToolbarButton(
+                parent, template, "EditorPlusToolsButton", "Tools",
+                () =>
+                {
+                    if (!IsInMissionEditor()) return;
+                    EditorToolsMenu.BindAnchor(_toolsButton.transform as RectTransform);
+                    EditorToolsMenu.Toggle();
                 });
 
             Toggle autoSaveTemplate = parent.GetComponentsInChildren<Toggle>(true)
@@ -462,7 +480,7 @@ namespace EditorPlus
                 Instance.ignoreTerrain,
                 v => { Instance.ignoreTerrain = v; }
             );
-            return _overlayToggleButton && _gridToggleButton && _atomicBuilderButton && _holdPosToggle;
+            return _overlayToggleButton && _atomicBuilderButton && _toolsButton && _holdPosToggle;
         }
 
     }

@@ -88,8 +88,8 @@ namespace EditorPlus
             if (_sceneSetupCo != null) { StopCoroutine(_sceneSetupCo); _sceneSetupCo = null; }
 
             _overlayToggleButton = null;
-            _gridToggleButton = null;
             _atomicBuilderButton = null;
+            _toolsButton = null;
             _holdPosToggle = null;
             _terrainToggle = null;
             objectivesBtn = null;
@@ -103,6 +103,8 @@ namespace EditorPlus
             }
             ReflectionUtils.ClearMissionObjectivesCache();
             AtomicBuilder.AtomicBuilderUI.OnSceneUnloaded();
+            BatchRenameUI.OnSceneUnloaded();
+            EditorToolsMenu.OnSceneUnloaded();
         }
         private IEnumerator EnsureEditorMenu()
         {

@@ -53,10 +53,17 @@ Integrated in-editor port of the desktop Atomic Builder workflow (compatible wit
 
 ## Version Information
 
-**Current Version**: 1.6.1  
+**Current Version**: 1.6.2  
 **Updated by**: Endar728  
 **Original Creator**: nikkorap (v1.4.2)  
-**Prior release line**: [Endar728/EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728/releases) (1.5.2)
+**Prior release line**: [Endar728/EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728/releases) (1.6.1)
+
+### What's New in v1.6.2 (Updated by Endar728)
+- **Duplicate button** — **Tools → Duplicate** (Ctrl+D still works)
+- **Batch rename** — Rename multiple selected units at once with a prefix + number
+- **Toolbar cleanup** — Duplicate, batch rename, and graph grid grouped under **Tools**; **Builder** label shortened
+
+See [RELEASE_1.6.2.md](RELEASE_1.6.2.md) for full upgrade notes from 1.6.1.
 
 ### What's New in v1.6.1 (Updated by Endar728)
 - **Atomic Builder** — In-editor blueprint save/paste, Library tab, game-folder `Blueprints/`, mission-editor styling

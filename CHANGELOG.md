@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.6.2] - 2026-05-28
+
+### Added
+
+- **Duplicate in place** — **Tools → Duplicate** (or **Ctrl+D**): copies the current selection with a small offset so copies don’t stack on the originals.
+- **Batch rename** — **Tools → Batch rename…**: rename all selected units at once with a prefix and start number (`Squad_A_1`, `Squad_A_2`, …). Names are checked for uniqueness across the mission.
+
+### Changed
+
+- **Mission editor toolbar** — **Duplicate**, **Batch rename**, and **Graph grid** moved under a single **Tools** dropdown to reduce top-bar clutter. **Atomic Builder** label shortened to **Builder**.
+
+### Fixed
+
+- **Tools menu positioning** — Dropdown opens below the toolbar instead of overlapping other buttons.
+- **Batch rename panel** — Panel moved to the bottom-right corner so it no longer blocks the left unit inspector.
+
 ## [1.6.1] - 2026-05-28
 
 ### Added
