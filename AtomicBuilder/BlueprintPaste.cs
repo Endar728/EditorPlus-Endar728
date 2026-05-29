@@ -26,6 +26,12 @@ namespace EditorPlus.AtomicBuilder
 
             message = null;
 
+            if (!AtomicBuilderPaths.EnsureBlueprintsFolder())
+            {
+                message = "Could not create Blueprints folder in the game directory.";
+                return false;
+            }
+
             string path = AtomicBuilderPaths.BlueprintFile(blueprintName);
 
             if (!File.Exists(path))

@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## [1.6.3] - 2026-05-29
+
+### Fixed
+
+- **Atomic Builder Library tab** — Restored the **Library** tab and blueprint file browser that were removed in 1.6.2. Browse saved blueprints under `<game install>/Blueprints/`, filter by name, and click to select for paste.
+
 ## [1.6.2] - 2026-05-28
 
 ### Added

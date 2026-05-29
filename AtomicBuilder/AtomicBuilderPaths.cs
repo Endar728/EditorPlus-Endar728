@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BepInEx;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace EditorPlus.AtomicBuilder
 {
@@ -15,23 +16,61 @@ namespace EditorPlus.AtomicBuilder
         };
 
         static string _blueprintsRoot;
+        static bool _loggedReady;
 
         /// <summary>
-        /// &lt;game install&gt;/Blueprints — created on first access and at plugin startup.
+        /// &lt;game install&gt;/Blueprints — created on plugin load, scene load, and before any blueprint file access.
         /// </summary>
         internal static string BlueprintsRoot
         {
             get
             {
-                if (string.IsNullOrEmpty(_blueprintsRoot))
-                    _blueprintsRoot = Path.Combine(BepInEx.Paths.GameRootPath, "Blueprints");
-                return _blueprintsRoot;
+                EnsureBlueprintsFolder();
+                return _blueprintsRoot ?? ResolveBlueprintsRoot();
             }
         }
 
-        internal static void EnsureBlueprintsFolder()
+        internal static bool EnsureBlueprintsFolder()
         {
-            Directory.CreateDirectory(BlueprintsRoot);
+            try
+            {
+                string root = ResolveBlueprintsRoot();
+                _blueprintsRoot = root;
+                Directory.CreateDirectory(root);
+
+                if (!Directory.Exists(root))
+                {
+                    Plugin.Logger?.LogError($"[EditorPlus] Blueprints folder could not be created: {root}");
+                    _loggedReady = false;
+                    return false;
+                }
+
+                if (!_loggedReady)
+                {
+                    Plugin.Logger?.LogInfo($"[EditorPlus] Blueprints folder ready: {root}");
+                    _loggedReady = true;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Plugin.Logger?.LogError($"[EditorPlus] Blueprints folder creation failed: {ex.Message}");
+                _loggedReady = false;
+                return false;
+            }
+        }
+
+        static string ResolveBlueprintsRoot()
+        {
+            string gameRoot = BepInEx.Paths.GameRootPath;
+            if (string.IsNullOrWhiteSpace(gameRoot))
+                gameRoot = Path.GetDirectoryName(Application.dataPath);
+
+            if (string.IsNullOrWhiteSpace(gameRoot))
+                throw new InvalidOperationException("Could not resolve Nuclear Option game root for Blueprints folder.");
+
+            return Path.Combine(gameRoot, "Blueprints");
         }
 
         internal static string MissionsRoot =>
@@ -44,13 +83,16 @@ namespace EditorPlus.AtomicBuilder
 
         internal static string BlueprintFile(string name)
         {
+            EnsureBlueprintsFolder();
             string safe = SanitizeFileName(name);
             return Path.Combine(BlueprintsRoot, safe + ".json");
         }
 
         internal static List<string> ListBlueprintNames()
         {
-            if (!Directory.Exists(BlueprintsRoot)) return new List<string>();
+            if (!EnsureBlueprintsFolder() || !Directory.Exists(BlueprintsRoot))
+                return new List<string>();
+
             return Directory.GetFiles(BlueprintsRoot, "*.json")
                 .Select(Path.GetFileNameWithoutExtension)
                 .Where(n => !string.IsNullOrEmpty(n))

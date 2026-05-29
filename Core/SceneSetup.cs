@@ -24,6 +24,8 @@ namespace EditorPlus
         {
             if (s.name != "GameWorld") return;
 
+            AtomicBuilder.AtomicBuilderPaths.EnsureBlueprintsFolder();
+
             // Ensure copy-paste input handler exists immediately
             // This ensures it's created before other mods' handlers
             CopyPasteInputHandler.EnsureExists();

@@ -55,8 +55,13 @@ namespace EditorPlus.AtomicBuilder
                     ["origin"] = JArray.FromObject(new[] { origin.x, origin.y, origin.z })
                 };
 
+                if (!AtomicBuilderPaths.EnsureBlueprintsFolder())
+                {
+                    message = "Could not create Blueprints folder in the game directory.";
+                    return false;
+                }
+
                 string path = AtomicBuilderPaths.BlueprintFile(blueprintName);
-                Directory.CreateDirectory(Path.GetDirectoryName(path) ?? AtomicBuilderPaths.BlueprintsRoot);
                 File.WriteAllText(path, blueprint.ToString(Newtonsoft.Json.Formatting.Indented));
                 message = $"Saved \"{Path.GetFileNameWithoutExtension(path)}\" ({count} objects, R={radiusMeters:0}m).";
                 Plugin.Logger?.LogInfo($"[AtomicBuilder] {message} → {path}");

@@ -2,7 +2,7 @@
 
 A [BepInEx](https://docs.bepinex.dev/) mod that enhances the **Nuclear Option** mission editor with a node graph, multi-unit workflows, blueprint save/paste, and quality-of-life tools.
 
-**Current version:** 1.6.2  
+**Current version:** 1.6.3  
 **Maintained by:** [Endar728](https://github.com/Endar728) — [EditorPlus-Endar728](https://github.com/Endar728/EditorPlus-Endar728)  
 **Original author:** [nikkorap](https://github.com/nikkorap/EditorPlus) (v1.4.2)
 
@@ -32,12 +32,14 @@ From the [latest release](https://github.com/Endar728/EditorPlus-Endar728/releas
 
 Blueprints are saved to `<game install>\Blueprints\` — that folder is created automatically when the mod loads.
 
+**Upgrading from 1.6.2?** Replace `com.nikkorap.EditorPlus.dll` only. Version **1.6.3** restores the Atomic Builder **Library** tab for browsing saved blueprints.
+
 ## Mission editor toolbar
 
 | Button | What it does |
 |--------|----------------|
 | **Graph** | Open the objective/outcome node graph overlay |
-| **Builder** | Open Atomic Builder (blueprint save/paste panel) |
+| **Builder** | Open Atomic Builder (blueprint save/paste + library browser) |
 | **Tools** | Duplicate, batch rename, and graph grid |
 | **Hold Pos** | Keep newly placed / pasted units from drifting |
 | **noclip** | Ignore terrain clamping while editing |
@@ -75,8 +77,10 @@ Unit hotkeys are disabled while you are typing in a text field.
 
 In-editor blueprint save and paste, compatible with desktop Atomic Builder JSON files.
 
-- **Builder** toolbar button → side panel with blueprint name, capture radius, **Save blueprint**, and **Paste at cursor**.
-- **Ctrl+Alt+V** pastes a blueprint at the editor camera / cursor.
+- **Builder** toolbar button → side panel with two tabs:
+  - **Blueprint** — name, capture radius (m), **Save blueprint**, **Paste at cursor**
+  - **Library** — scrollable list of `.json` files in `<game install>/Blueprints/`, with a name filter; click a blueprint to load it into the name field and switch to the Blueprint tab
+- **Ctrl+Alt+V** pastes the named blueprint at the editor camera / cursor (works from either tab once a name is set).
 - **Ctrl+V** is reserved for copied unit groups only.
 
 ### Node graph UI
